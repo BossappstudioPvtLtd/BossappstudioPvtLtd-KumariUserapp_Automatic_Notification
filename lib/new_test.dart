@@ -236,7 +236,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     setState(() {
       tripDirectionDetailsInfo = detailsFromDirectionAPI;
     });
-
+print("tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
     Navigator.pop(context);
 
     showCupertinoModalPopup(
