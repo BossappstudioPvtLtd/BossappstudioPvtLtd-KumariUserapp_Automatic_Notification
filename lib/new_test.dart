@@ -27,6 +27,7 @@ import 'package:new_app/components/m_buttons.dart';
 import 'package:new_app/components/payment_dialod.dart';
 import 'package:new_app/components/splashripple.dart';
 import 'package:new_app/navigatinbar/botton_navigtion.dart';
+import 'package:new_app/navigatinbar/damo.dart';
 import 'package:new_app/navigatinbar/trips_history_page.dart';
 
 import 'package:new_app/search_destination.dart';
@@ -60,6 +61,12 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
   String stateOfApp = "normal";
   bool nearbyOnlineDriversKeysLoaded = false;
   BitmapDescriptor? carIconNearbyDriver;
+
+  BitmapDescriptor? carIconNearbyDriver3Seats;
+
+  BitmapDescriptor? carIconNearbyDriver4Seats;
+  BitmapDescriptor? carIconNearbyDriver7Seats;
+
   DatabaseReference? tripRequestRef;
   List<OnlineNearbyDrivers>? availableNearbyOnlineDriversList;
   StreamSubscription<DatabaseEvent>? tripStreamSubscription;
@@ -69,16 +76,42 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
   double animationValue = 0; // Initial animation value
 
-  makeDriverNearbyCarIcon() {
-    if (carIconNearbyDriver == null) {
-      ImageConfiguration configuration = createLocalImageConfiguration(context,
-          size: const Size(0.5, 0.5)); // Smaller size
-      BitmapDescriptor.fromAssetImage(
-        configuration,
-        "assets/images/transport.png",
-      ).then((iconImage) {
-        carIconNearbyDriver = iconImage;
-      });
+  // makeDriverNearbyCarIcon() {
+  //   if (carIconNearbyDriver == null) {
+  //     ImageConfiguration configuration = createLocalImageConfiguration(context,
+  //         size: const Size(0.5, 0.5)); // Smaller size
+  //     BitmapDescriptor.fromAssetImage(
+  //       configuration,
+  //       "assets/images/taxicopy.png",
+  //     ).then((iconImage) {
+  //       carIconNearbyDriver = iconImage;
+  //     });
+  //   }
+  // }
+  Future<void> makeDriverNearbyCarIcons3Seats() async {
+    if (carIconNearbyDriver3Seats == null) {
+      carIconNearbyDriver3Seats = await BitmapDescriptor.fromAssetImage(
+        createLocalImageConfiguration(context, size: const Size(0.5, 0.5)),
+        "assets/images/preview.png",
+      );
+    }
+  }
+
+  Future<void> makeDriverNearbyCarIcons4Seats() async {
+    if (carIconNearbyDriver4Seats == null) {
+      carIconNearbyDriver4Seats = await BitmapDescriptor.fromAssetImage(
+        createLocalImageConfiguration(context, size: const Size(0.5, 0.5)),
+        "assets/images/taxicopy.png",
+      );
+    }
+  }
+
+  Future<void> makeDriverNearbyCarIcons7Seats() async {
+    if (carIconNearbyDriver7Seats == null) {
+      carIconNearbyDriver7Seats = await BitmapDescriptor.fromAssetImage(
+        createLocalImageConfiguration(context, size: const Size(0.5, 0.5)),
+        "assets/images/WhatsApp.png",
+      );
     }
   }
 
@@ -101,44 +134,42 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     await getUserInfoAndCheckBlockStatus();
 
     await initializeGeoFireListener();
-     showDialog(
-  barrierDismissible: false,
-  context: context,
-  builder: (BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical:100,horizontal: 10),
-    child: Container(
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius:BorderRadius.circular(16)),
-    
-      child: Stack(
-        children: <Widget>[
-          // Your existing AdvertisementShow widget
-        
-             const AdvertisementShow(),
-        
-          // Close button
-          Positioned(
-           top: 20,
-            right: 10,
-            child: IconButton(
-              
-              icon: const CircleAvatar(
-                backgroundColor: Colors.black,
-                child: 
-              Icon(Icons.close,color: Colors.white,)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ],
-      ),
-    ),
-  ),
-);
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 10),
+        child: Container(
+          height: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(16)),
+          child: Stack(
+            children: <Widget>[
+              // Your existing AdvertisementShow widget
 
+              const AdvertisementShow(),
+
+              // Close button
+              Positioned(
+                top: 20,
+                right: 10,
+                child: IconButton(
+                  icon: const CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -146,9 +177,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     getUserInfoAndCheckBlockStatus();
-   
   }
-
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -161,8 +190,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    
-  tripStatusDisplayController.close();
+
+    tripStatusDisplayController.close();
     super.dispose();
   }
 
@@ -226,7 +255,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
       builder: (BuildContext context) =>
           LoadingDialog(messageText: "Getting direction...".tr()),
     );
- 
+
     ///Directions API
     var detailsFromDirectionAPI =
         await CommonMethods.getDirectionDetailsFromAPI(
@@ -236,7 +265,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     setState(() {
       tripDirectionDetailsInfo = detailsFromDirectionAPI;
     });
-print("tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
+    print(
+        "tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
     Navigator.pop(context);
 
     showCupertinoModalPopup(
@@ -264,257 +294,317 @@ print("tripDirectionDetailsInfo======================================$tripDirect
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18),
+                padding:  const EdgeInsets.symmetric(vertical: 18),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   
-                       SizedBox(
-                        height: 300,
-                        child: Card(
-                            elevation: 10,
+                    Card(
+                      
+                          child: Container(
                             
-                              color: Colors.black87,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * .90,
-                            decoration: const BoxDecoration(
-                              
-                              color: Colors.black87,
-                           borderRadius:BorderRadius.all(Radius.circular(16))
-                            ),
-                              
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, right: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            (tripDirectionDetailsInfo != null)
-                                                ? tripDirectionDetailsInfo!
-                                                    .distanceTextString!
-                                                : "",
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white70,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            (tripDirectionDetailsInfo != null)
-                                                ? tripDirectionDetailsInfo!
-                                                    .durationTextString!
-                                                : "",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white70,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
+                      height: 300,
+                            width: MediaQuery.of(context).size.width * .90,
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 1,color:Colors.teal),
+                                color: const Color.fromARGB(255, 26, 25, 25),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(12))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        (tripDirectionDetailsInfo != null)
+                                            ? tripDirectionDetailsInfo!
+                                                .distanceTextString!
+                                            : "",
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      Text(
+                                        (tripDirectionDetailsInfo != null)
+                                            ? tripDirectionDetailsInfo!
+                                                .durationTextString!
+                                            : "",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
                                       children: [
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
+                                        GestureDetector(
+                                          onTap: ()async {
+                                        MakeTriprequst();
+                                        availableNearbyOnlineDriversList =
+                                            ManageDriversMethods
+                                                .nearbyOnlineDriversList;
+                                        //search driver
+                                        searchDriver3();
+                                        // Navigate to the SplashRipple page
+                                        await showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CupertinoTheme(
+                                              data: const CupertinoThemeData(
+                                                brightness: Brightness
+                                                    .light, // Ensure the modal is bright
+                                              ),
+                                              child: Container(
+                                                height: 250,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.black,
+                                                ),
+                                                child: const SpalshRipple(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                        // Code here will execute when returning from SplashRipple page
+                                        resetAppNow(); // Reset the app state
+                                        cancelRideRequest();
+
+                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                      },
+                                          child: Image.asset(
+                                            "assets/logo/autorickshaw.png",
+                                            height: 100,
+                                            width: 80,
+                                          ),
+                                        ),
+                                        Text(
+                                          (tripDirectionDetailsInfo != null)
+                                              ? "₹ ${(cMethods.calculateFareAmountFor3Seats(tripDirectionDetailsInfo!)).toString()}"
+                                              : "",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: ()async {
+                                        MakeTriprequst();
+                                        availableNearbyOnlineDriversList =
+                                            ManageDriversMethods
+                                                .nearbyOnlineDriversList;
+                                        //search driver
+                                        searchDriver4();
+                                        // Navigate to the SplashRipple page
+                                        await showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CupertinoTheme(
+                                              data: const CupertinoThemeData(
+                                                brightness: Brightness
+                                                    .light, // Ensure the modal is bright
+                                              ),
+                                              child: Container(
+                                                height: 250,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.black,
+                                                ),
+                                                child: const SpalshRipple(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                        // Code here will execute when returning from SplashRipple page
+                                        resetAppNow(); // Reset the app state
+                                        cancelRideRequest();
+
+                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                      },
+                                          child: Material(
+                                            
+                                              color:const Color.fromARGB(255, 75, 75, 75),
+                                              borderOnForeground: true,
+                                            borderRadius: BorderRadius.circular(16),
+                                            elevation: 20,
+                                            child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(16),
+                                              border: Border.all(color: Colors.grey),
+                                            ),
+                                            
                                               child: Image.asset(
-                                                "assets/logo/autorickshaw.png",
-                                                height: 100,
+                                                "assets/logo/cartaxi.png",
+                                                height: 80,
                                                 width: 80,
                                               ),
                                             ),
-                                            Text(
-                                              (tripDirectionDetailsInfo != null)
-                                                  ? "₹ ${(cMethods.calculateFareAmountFor3Seats(tripDirectionDetailsInfo!)).toString()}"
-                                                  : "",
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.white70,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: Image.asset(
-                                                "assets/logo/cartaxi.png",
-                                                height: 100,
-                                                width: 100,
-                                              ),
-                                            ),
-                                            Text(
-                                              (tripDirectionDetailsInfo != null)
-                                                  ? "₹ ${(cMethods.calculateFareAmountFor4Seats(tripDirectionDetailsInfo!)).toString()}"
-                                                  : "",
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.white70,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {},
-                                              child: Image.asset(
-                                                "assets/logo/car7.png",
-                                                height: 100,
-                                                width: 100,
-                                              ),
-                                            ),
-                                            Text(
-                                              (tripDirectionDetailsInfo != null)
-                                                  ? "₹ ${(cMethods.calculateFareAmountFor7Seats(tripDirectionDetailsInfo!)).toString()}"
-                                                  : "",
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.white70,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          (tripDirectionDetailsInfo != null)
+                                              ? "₹ ${(cMethods.calculateFareAmountFor4Seats(tripDirectionDetailsInfo!)).toString()}"
+                                              : "",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                    Column(
                                       children: [
-                                        MaterialButtons(
-                                          elevationsize: 20,
-                                          fontSize: 17,
-                                          containerheight: 40,
-                                          containerwidth: 100,
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
-                                            text: "Cancel".tr(),
-                                            onTap: () {
-                                              resetAppNow();
-                                              Navigator.of(context).pop(false);
-                                            }),
-
-                                        MaterialButtons(
-                                          elevationsize: 20,
-                                          text: "Go".tr(),
-                                          fontSize: 17,
-                                          containerheight: 40,
-                                          containerwidth: 100,
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
-                                          onTap: () async {
-                                            MakeTriprequst();
-                                            availableNearbyOnlineDriversList =
+                                        GestureDetector(
+                                          onTap: ()async {
+                                        MakeTriprequst();
+                                        availableNearbyOnlineDriversList =
                                             ManageDriversMethods
-                                            .nearbyOnlineDriversList;
-                                            //search driver
-                                            searchDriver();
-                                            // Navigate to the SplashRipple page
-                                            await showCupertinoModalPopup(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return CupertinoTheme(
-                                                  data:
-                                                      const CupertinoThemeData(
-                                                    brightness: Brightness
-                                                        .light, // Ensure the modal is bright
-                                                  ),
-                                                  child: Container(
-                                                    height: 250,
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16),
-                                                      color: Colors.black,
-                                                    ),
-                                                    child: const SpalshRipple(),
-                                                  ),
-                                                );
-                                              },
+                                                .nearbyOnlineDriversList;
+                                        //search driver
+                                        searchDriver();
+                                        // Navigate to the SplashRipple page
+                                        await showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CupertinoTheme(
+                                              data: const CupertinoThemeData(
+                                                brightness: Brightness
+                                                    .light, // Ensure the modal is bright
+                                              ),
+                                              child: Container(
+                                                height: 250,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.black,
+                                                ),
+                                                child: const SpalshRipple(),
+                                              ),
                                             );
-                                            // Code here will execute when returning from SplashRipple page
-                                            resetAppNow(); // Reset the app state
-                                            cancelRideRequest();
-
-                                            Navigator.of(context).pop(
-                                                false); // Cancel any ride requests or similar tasks
                                           },
+                                        );
+                                        // Code here will execute when returning from SplashRipple page
+                                        resetAppNow(); // Reset the app state
+                                        cancelRideRequest();
+
+                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                      },
+                                          child: Image.asset(
+                                            "assets/logo/car7.png",
+                                            height: 100,
+                                            width: 100,
+                                          ),
                                         ),
-
-                                        // Padding(
-                                        //     padding: const EdgeInsets.only(
-                                        //         right: 20),
-
-                                        //     child: ElevatedButton(
-                                        //       onPressed: () async {
-                                        //         MakeTriprequst();
-                                        //         availableNearbyOnlineDriversList =
-                                        //             ManageDriversMethods
-                                        //                 .nearbyOnlineDriversList;
-                                        //         //search driver
-                                        //         searchDriver();
-                                        //         // Navigate to the SplashRipple page
-                                        //         await showCupertinoModalPopup(
-                                        //           context: context,
-                                        //           builder:
-                                        //               (BuildContext context) {
-                                        //             return CupertinoTheme(
-                                        //               data:
-                                        //                   const CupertinoThemeData(
-                                        //                 brightness: Brightness
-                                        //                     .light, // Ensure the modal is bright
-                                        //               ),
-                                        //               child: Container(
-                                        //                 height: 300,
-                                        //                 width: double.infinity,
-                                        //                 decoration:
-                                        //                     BoxDecoration(
-                                        //                   borderRadius:
-                                        //                       BorderRadius
-                                        //                           .circular(16),
-                                        //                   color: Colors.black,
-                                        //                 ),
-                                        //                 child:
-                                        //                     const SpalshRipple(),
-                                        //               ),
-                                        //             );
-                                        //           },
-                                        //         );
-                                        //         // Code here will execute when returning from SplashRipple page
-                                        //         resetAppNow(); // Reset the app state
-                                        //         cancelRideRequest();
-
-                                        //         Navigator.of(context).pop(
-                                        //             false); // Cancel any ride requests or similar tasks
-                                        //       },
-                                        //       child: const Text("GO"),
-                                        //     )),
+                                        Text(
+                                          (tripDirectionDetailsInfo != null)
+                                              ? "₹ ${(cMethods.calculateFareAmountFor7Seats(tripDirectionDetailsInfo!)).toString()}"
+                                              : "",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
-                              
-                            )),
-                      ),
-                    
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    MaterialButtons(
+                                        elevationsize: 20,
+                                        fontSize: 17,
+                                        containerheight: 40,
+                                        containerwidth: 100,
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        text: "Cancel".tr(),
+                                        onTap: () {
+                                          resetAppNow();
+                                          Navigator.of(context).pop(false);
+                                        }),
+
+                                    MaterialButtons(
+                                      elevationsize: 20,
+                                      text: "Go".tr(),
+                                      fontSize: 17,
+                                      containerheight: 40,
+                                      containerwidth: 100,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      onTap: () async {
+                                        MakeTriprequst();
+                                        availableNearbyOnlineDriversList =
+                                            ManageDriversMethods
+                                                .nearbyOnlineDriversList;
+                                        //search driver
+                                        searchDriver();
+                                        // Navigate to the SplashRipple page
+                                        await showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CupertinoTheme(
+                                              data: const CupertinoThemeData(
+                                                brightness: Brightness
+                                                    .light, // Ensure the modal is bright
+                                              ),
+                                              child: Container(
+                                                height: 250,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: Colors.black,
+                                                ),
+                                                child: const SpalshRipple(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                        // Code here will execute when returning from SplashRipple page
+                                        resetAppNow(); // Reset the app state
+                                        cancelRideRequest();
+
+                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                      },
+                                    ),
+
+                                   
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                    ),
                   ],
                 ),
               ),
@@ -552,56 +642,36 @@ print("tripDirectionDetailsInfo======================================$tripDirect
 
     //fit the polyline into the map
     LatLngBounds boundsLatLng;
-    if (pickupGeoGraphicCoOrdinates.latitude >
-            dropOffDestinationGeoGraphicCoOrdinates.latitude &&
-        pickupGeoGraphicCoOrdinates.longitude >
-            dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: dropOffDestinationGeoGraphicCoOrdinates,
-        northeast: pickupGeoGraphicCoOrdinates,
-      );
-    } else if (pickupGeoGraphicCoOrdinates.longitude >
-        dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude,
-            dropOffDestinationGeoGraphicCoOrdinates.longitude),
-        northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
-            pickupGeoGraphicCoOrdinates.longitude),
-      );
-    } else if (pickupGeoGraphicCoOrdinates.latitude >
-        dropOffDestinationGeoGraphicCoOrdinates.latitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
-            pickupGeoGraphicCoOrdinates.longitude),
-        northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude,
-            dropOffDestinationGeoGraphicCoOrdinates.longitude),
-      );
-    } else {
-      boundsLatLng = LatLngBounds(
-        southwest: pickupGeoGraphicCoOrdinates,
-        northeast: dropOffDestinationGeoGraphicCoOrdinates,
-      );
-    }
+    if  (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOrdinates.latitude &&
+        pickupGeoGraphicCoOrdinates.longitude > dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+        boundsLatLng = LatLngBounds(southwest: dropOffDestinationGeoGraphicCoOrdinates,
+        northeast: pickupGeoGraphicCoOrdinates,); } 
+        
+else if (pickupGeoGraphicCoOrdinates.longitude > dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+         boundsLatLng = LatLngBounds( southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude, dropOffDestinationGeoGraphicCoOrdinates.longitude),
+         northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude, pickupGeoGraphicCoOrdinates.longitude),);} 
 
-    controllerGoogleMap!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
+else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOrdinates.latitude) {
+         boundsLatLng = LatLngBounds( southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude, pickupGeoGraphicCoOrdinates.longitude),
+         northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude, dropOffDestinationGeoGraphicCoOrdinates.longitude),);} 
+
+   else {boundsLatLng = LatLngBounds( southwest: pickupGeoGraphicCoOrdinates, northeast: dropOffDestinationGeoGraphicCoOrdinates,);}
+
+    controllerGoogleMap!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
 
     //add markers to pickup and dropOffDestination points
-    Marker pickUpPointMarker = Marker(
-      markerId: const MarkerId("pickUpPointMarkerID"),
+    Marker pickUpPointMarker = Marker(markerId: const MarkerId("pickUpPointMarkerID"),
       position: pickupGeoGraphicCoOrdinates,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      infoWindow: InfoWindow(
-          title: pickUpLocation.placeName, snippet: "Pickup Location"),
+      infoWindow: InfoWindow(title: pickUpLocation.placeName, snippet: "Pickup Location"),
     );
 
     Marker dropOffDestinationPointMarker = Marker(
       markerId: const MarkerId("dropOffDestinationPointMarkerID"),
       position: dropOffDestinationGeoGraphicCoOrdinates,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow: InfoWindow(
-          title: dropOffDestinationLocation.placeName,
-          snippet: "Destination Location"),
+      infoWindow: InfoWindow(title: dropOffDestinationLocation.placeName,
+      snippet: "Destination Location"),
     );
 
     setState(() {
@@ -675,7 +745,7 @@ print("tripDirectionDetailsInfo======================================$tripDirect
     //send ride request
   }
 
-  updateAvailableNearbyOnlineDriversOnMap() {
+  void updateAvailableNearbyOnlineDriversOnMap() async {
     setState(() {
       markerSet.clear();
     });
@@ -685,15 +755,66 @@ print("tripDirectionDetailsInfo======================================$tripDirect
     for (OnlineNearbyDrivers eachOnlineNearbyDriver
         in ManageDriversMethods.nearbyOnlineDriversList) {
       LatLng driverCurrentPosition = LatLng(
-          eachOnlineNearbyDriver.latDriver!, eachOnlineNearbyDriver.lngDriver!);
+        eachOnlineNearbyDriver.latDriver!,
+        eachOnlineNearbyDriver.lngDriver!,
+      );
 
-      Marker driverMarker = Marker(
+      print( "============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
+
+      // Fetch car details from Firebase Realtime Database
+      DataSnapshot snapshot = await FirebaseDatabase.instance
+          .ref("drivers/${eachOnlineNearbyDriver.uidDriver}/car_details")
+          .get();
+
+      if (snapshot.exists) {
+        Map<String, dynamic> carDetails =
+            Map<String, dynamic>.from(snapshot.value as Map);
+
+        int carSeats;
+        try {
+          carSeats = int.parse(carDetails['carSeats'].toString());
+        } catch (e) {
+          print(
+              "Error parsing carSeats for driver ID: ${eachOnlineNearbyDriver.uidDriver}, setting default value.");
+          carSeats = 0; // Default value if parsing fails
+        }
+        BitmapDescriptor? carIcon;
+        print("============driver ID==============$carSeats");
+
+        // Determine which car icon to use based on carSeats
+        if (carSeats == 3) {
+          if (carIconNearbyDriver3Seats == null) {
+            await makeDriverNearbyCarIcons3Seats();
+          }
+          carIcon = carIconNearbyDriver3Seats;
+        } else if (carSeats == 4) {
+          if (carIconNearbyDriver4Seats == null) {
+            await makeDriverNearbyCarIcons4Seats();
+          }
+          carIcon = carIconNearbyDriver4Seats;
+        } else if (carSeats == 7) {
+          if (carIconNearbyDriver7Seats == null) {
+            await makeDriverNearbyCarIcons7Seats();
+          }
+          carIcon = carIconNearbyDriver7Seats;
+        } else {
+          carIcon =
+              carIconNearbyDriver!; // Fallback to default icon if no match
+        }
+
+        // Create the marker for the driver
+        Marker driverMarker = Marker(
           markerId: MarkerId("driver ID = ${eachOnlineNearbyDriver.uidDriver}"),
           position: driverCurrentPosition,
-          icon: carIconNearbyDriver!,
-          onTap: () {});
+          icon: carIcon!,
+          onTap: () {},
+        );
 
-      markersTempSet.add(driverMarker);
+        markersTempSet.add(driverMarker);
+      } else {
+        print(
+            "No car details found for driver ID: ${eachOnlineNearbyDriver.uidDriver}");
+      }
     }
 
     setState(() {
@@ -899,180 +1020,187 @@ print("tripDirectionDetailsInfo======================================$tripDirect
       }
     });
   }
-StreamController<String> tripStatusDisplayController = StreamController<String>.broadcast();
 
- 
+  StreamController<String> tripStatusDisplayController =
+      StreamController<String>.broadcast();
 
-
- void displayTripDetailsContainer() {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: Colors.transparent,
-    builder: (BuildContext context) {
-      return Container(
-        height: 300,
-        decoration: const BoxDecoration(
-          color: Colors.black87,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white24,
-              blurRadius: 15.0,
-              spreadRadius: 0.5,
-              offset: Offset(0.7, 0.7),
+  void displayTripDetailsContainer() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          decoration: const BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 5),
-              // Trip status display text
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  StreamBuilder<String>(
-                    stream: tripStatusDisplayController.stream,
-                    initialData: tripStatusDisplay,
-                    builder: (context, snapshot) {
-                      return Text(
-                        snapshot.data ?? '',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.green,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                      );
-                    },
-                  ),
-                ],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white24,
+                blurRadius: 15.0,
+                spreadRadius: 0.5,
+                offset: Offset(0.7, 0.7),
               ),
-              const SizedBox(height: 19),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      photoDriver == ''
-                          ? "https://firebasestorage.googleapis.com/v0/b/myapiprojects-425308.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
-                          : photoDriver,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 5),
+                // Trip status display text
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StreamBuilder<String>(
+                      stream: tripStatusDisplayController.stream,
+                      initialData: tripStatusDisplay,
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data ?? '',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                        );
+                      },
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        nameDriver,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey,
-                        ),
+                  ],
+                ),
+                const SizedBox(height: 19),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipOval(
+                      child: Image.network(
+                        photoDriver == ''
+                            ? "https://firebasestorage.googleapis.com/v0/b/myapiprojects-425308.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
+                            : photoDriver,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
                       ),
-                      Text(
-                        carDetailsDriver,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nameDriver,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          carDetailsDriver,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 19),
+                const Divider(
+                  height: 1,
+                  color: Colors.white70,
+                  thickness: 1,
+                ),
+                const SizedBox(height: 19),
+                // Call driver button
+                GestureDetector(
+                  onTap: () {
+                    launchUrl(Uri.parse("tel://$phoneNumberDriver"));
+                  },
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 21,
+                        backgroundColor: Colors.green,
+                        child: CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.green,
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.black,
+                            child: Icon(
+                              Icons.phone,
+                              color: Colors.green,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 19),
-              const Divider(
-                height: 1,
-                color: Colors.white70,
-                thickness: 1,
-              ),
-              const SizedBox(height: 19),
-              // Call driver button
-              GestureDetector(
-                onTap: () {
-                  launchUrl(Uri.parse("tel://$phoneNumberDriver"));
-                },
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 21,
-                      backgroundColor: Colors.green,
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.green,
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.black,
-                          child: Icon(
-                            Icons.phone,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-updateFromDriverCurrentLocationToPickUp(driverCurrentLocationLatLng) async {
-  if (!requestingDirectionDetailsInfo) {
-    requestingDirectionDetailsInfo = true;
-
-    var userPickUpLocationLatLng = LatLng(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
-
-    var directionDetailsPickup = await CommonMethods.getDirectionDetailsFromAPI(
-        driverCurrentLocationLatLng, userPickUpLocationLatLng);
-
-    if (directionDetailsPickup == null) {
-      return;
-    }
-
-    tripStatusDisplayController.add("Driver is Coming - ${directionDetailsPickup.durationTextString}");
-
-    requestingDirectionDetailsInfo = false;
+        );
+      },
+    );
   }
-}
 
-updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng) async {
-  if (!requestingDirectionDetailsInfo) {
-    requestingDirectionDetailsInfo = true;
+  updateFromDriverCurrentLocationToPickUp(driverCurrentLocationLatLng) async {
+    if (!requestingDirectionDetailsInfo) {
+      requestingDirectionDetailsInfo = true;
 
-    var dropOffLocation = Provider.of<AppInfo>(context, listen: false).dropOffLocation;
-    var userDropOffLocationLatLng = LatLng(dropOffLocation!.latitudePosition!, dropOffLocation.longitudePosition!);
+      var userPickUpLocationLatLng = LatLng(
+          currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
 
-    var directionDetailsPickup = await CommonMethods.getDirectionDetailsFromAPI(
-        driverCurrentLocationLatLng, userDropOffLocationLatLng);
+      var directionDetailsPickup =
+          await CommonMethods.getDirectionDetailsFromAPI(
+              driverCurrentLocationLatLng, userPickUpLocationLatLng);
 
-    if (directionDetailsPickup == null) {
-      return;
+      if (directionDetailsPickup == null) {
+        return;
+      }
+
+      tripStatusDisplayController.add(
+          "Driver is Coming - ${directionDetailsPickup.durationTextString}");
+
+      requestingDirectionDetailsInfo = false;
     }
-
-    tripStatusDisplayController.add("Driving to DropOff Location\n- ${directionDetailsPickup.durationTextString}");
-
-    requestingDirectionDetailsInfo = false;
   }
-}
 
+  updateFromDriverCurrentLocationToDropOffDestination(
+      driverCurrentLocationLatLng) async {
+    if (!requestingDirectionDetailsInfo) {
+      requestingDirectionDetailsInfo = true;
+
+      var dropOffLocation =
+          Provider.of<AppInfo>(context, listen: false).dropOffLocation;
+      var userDropOffLocationLatLng = LatLng(dropOffLocation!.latitudePosition!,
+          dropOffLocation.longitudePosition!);
+
+      var directionDetailsPickup =
+          await CommonMethods.getDirectionDetailsFromAPI(
+              driverCurrentLocationLatLng, userDropOffLocationLatLng);
+
+      if (directionDetailsPickup == null) {
+        return;
+      }
+
+      tripStatusDisplayController.add(
+          "Driving to DropOff Location\n- ${directionDetailsPickup.durationTextString}");
+
+      requestingDirectionDetailsInfo = false;
+    }
+  }
 
   noDriverAvailable() {
     showDialog(
@@ -1081,7 +1209,8 @@ updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng)
         builder: (BuildContext context) => InfoDialog(
               title: "No Driver Available".tr(),
               description:
-                  "No driver found in the nearby location. Please try again shortly.".tr(),
+                  "No driver found in the nearby location. Please try again shortly."
+                      .tr(),
             ));
   }
 
@@ -1136,15 +1265,6 @@ updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng)
       var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
         requestTimeoutDriver = requestTimeoutDriver - 1;
 
-        //when trip request is not requesting means trip request cancelled - stop timer
-        // if(stateOfApp != "requesting")
-        // {
-        //   timer.cancel();
-        //   currentDriverRef.set("cancelled");
-        //   currentDriverRef.onDisconnect();
-        //   requestTimeoutDriver = 20;
-        // }
-
         //when trip request is accepted by online nearest available driver
         currentDriverRef.onValue.listen((dataSnapshot) {
           if (dataSnapshot.snapshot.value.toString() == "accepted") {
@@ -1167,6 +1287,305 @@ updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng)
     });
   }
 
+
+   searchDriver3() {
+    if (availableNearbyOnlineDriversList!.length == 0) {
+      cancelRideRequest();
+      resetAppNow();
+      noDriverAvailable();
+      return;
+    }
+
+    var currentDriver = availableNearbyOnlineDriversList![0];
+
+    //send notification to this currentDriver - currentDriver means selected driver
+    sendNotificationToDriver3(currentDriver);
+
+    availableNearbyOnlineDriversList!.removeAt(0);
+
+  }
+
+  sendNotificationToDriver3(OnlineNearbyDrivers currentDriver) async 
+  {
+
+    //update driver's newTripStatus - assign tripID to current driver
+   DatabaseReference currentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("newTripStatus");
+
+   // Set the trip ID for the current driver
+   currentDriverRef.set(tripRequestRef!.key);
+
+   // Get the current driver's device recognition token
+   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("deviceToken");
+
+   print(
+      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+   // Fetch device token of the current driver
+   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+   if (tokenSnapshot.value != null) {
+    String deviceToken = tokenSnapshot.value.toString();
+
+    // Get the current driver's car details
+     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("car_details");
+
+     // Fetch car details including carSeats
+     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
+     if (carDetailsSnapshot.value != null) {
+      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+      // Check if carSeats is 3
+      if (carDetailsMap['carSeats'] == 3) {
+        // Send notification only if carSeats is 3
+        PushNotificationService.sendNotificationToSelectedDriver(
+            deviceToken, context, tripRequestRef!.key.toString());
+        print("Notification sent to driver with carSeats == 3");
+      } else {
+        print("Driver does not have carSeats == 3");
+      }
+     } else {
+      print("Car details not found for driver.");
+     }
+      } else {
+     print("Device token not found for driver.");}
+      
+  
+      const oneTickPerSec = Duration(seconds: 1);
+      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+        requestTimeoutDriver = requestTimeoutDriver - 1;
+
+        //when trip request is accepted by online nearest available driver
+        currentDriverRef.onValue.listen((dataSnapshot) {
+          if (dataSnapshot.snapshot.value.toString() == "accepted") {
+            timer.cancel();
+            currentDriverRef.onDisconnect();
+            requestTimeoutDriver = 20;
+          }
+        });
+        //if 20 seconds passed - send notification to next nearest online available driver
+        if (requestTimeoutDriver == 0) {
+          currentDriverRef.set("timeout");
+          timer.cancel();
+          currentDriverRef.onDisconnect();
+          requestTimeoutDriver = 20;
+
+          //send notification to next nearest online available driver
+          searchDriver3();
+        }
+      });
+    
+    
+  }
+  searchDriver4() {
+    if (availableNearbyOnlineDriversList!.length == 0) {
+      cancelRideRequest();
+      resetAppNow();
+      noDriverAvailable();
+      return;
+    }
+
+    var currentDriver = availableNearbyOnlineDriversList![0];
+
+    //send notification to this currentDriver - currentDriver means selected driver
+    sendNotificationToDriver4(currentDriver);
+
+    availableNearbyOnlineDriversList!.removeAt(0);
+
+  }
+
+  sendNotificationToDriver4(OnlineNearbyDrivers currentDriver) async 
+  {
+
+    //update driver's newTripStatus - assign tripID to current driver
+   DatabaseReference currentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("newTripStatus");
+
+   // Set the trip ID for the current driver
+   currentDriverRef.set(tripRequestRef!.key);
+
+   // Get the current driver's device recognition token
+   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("deviceToken");
+
+   print(
+      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+   // Fetch device token of the current driver
+   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+   if (tokenSnapshot.value != null) {
+    String deviceToken = tokenSnapshot.value.toString();
+
+    // Get the current driver's car details
+     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("car_details");
+
+     // Fetch car details including carSeats
+     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
+     if (carDetailsSnapshot.value != null) {
+      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+      // Check if carSeats is 4
+      if (carDetailsMap['carSeats'] == 4) {
+        // Send notification only if carSeats is 4
+        PushNotificationService.sendNotificationToSelectedDriver(
+            deviceToken, context, tripRequestRef!.key.toString());
+        print("Notification sent to driver with carSeats == 4");
+      } else {
+        print("Driver does not have carSeats == 3");
+      }
+     } else {
+      print("Car details not found for driver.");
+     }
+      } else {
+     print("Device token not found for driver.");}
+      
+  
+      const oneTickPerSec = Duration(seconds: 1);
+      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+        requestTimeoutDriver = requestTimeoutDriver - 1;
+
+        //when trip request is accepted by online nearest available driver
+        currentDriverRef.onValue.listen((dataSnapshot) {
+          if (dataSnapshot.snapshot.value.toString() == "accepted") {
+            timer.cancel();
+            currentDriverRef.onDisconnect();
+            requestTimeoutDriver = 20;
+          }
+        });
+        //if 20 seconds passed - send notification to next nearest online available driver
+        if (requestTimeoutDriver == 0) {
+          currentDriverRef.set("timeout");
+          timer.cancel();
+          currentDriverRef.onDisconnect();
+          requestTimeoutDriver = 20;
+
+          //send notification to next nearest online available driver
+          searchDriver3();
+        }
+      });
+    
+    
+  }
+ searchDriver7() {
+    if (availableNearbyOnlineDriversList!.length == 0) {
+      cancelRideRequest();
+      resetAppNow();
+      noDriverAvailable();
+      return;
+    }
+
+    var currentDriver = availableNearbyOnlineDriversList![0];
+
+    //send notification to this currentDriver - currentDriver means selected driver
+    sendNotificationToDriver7(currentDriver);
+
+    availableNearbyOnlineDriversList!.removeAt(0);
+
+  }
+
+  sendNotificationToDriver7(OnlineNearbyDrivers currentDriver) async 
+  {
+
+    //update driver's newTripStatus - assign tripID to current driver
+   DatabaseReference currentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("newTripStatus");
+
+   // Set the trip ID for the current driver
+   currentDriverRef.set(tripRequestRef!.key);
+
+   // Get the current driver's device recognition token
+   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+      .ref()
+      .child("drivers")
+      .child(currentDriver.uidDriver.toString())
+      .child("deviceToken");
+
+   print(
+      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+   // Fetch device token of the current driver
+   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+   if (tokenSnapshot.value != null) {
+    String deviceToken = tokenSnapshot.value.toString();
+
+    // Get the current driver's car details
+     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("car_details");
+
+     // Fetch car details including carSeats
+     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
+     if (carDetailsSnapshot.value != null) {
+      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+      // Check if carSeats is 7
+      if (carDetailsMap['carSeats'] == 7) {
+        // Send notification only if carSeats is 7
+        PushNotificationService.sendNotificationToSelectedDriver(
+            deviceToken, context, tripRequestRef!.key.toString());
+        print("Notification sent to driver with carSeats == 7");
+      } else {
+        print("Driver does not have carSeats == 3");
+      }
+     } else {
+      print("Car details not found for driver.");
+     }
+      } else {
+     print("Device token not found for driver.");}
+      
+  
+      const oneTickPerSec = Duration(seconds: 1);
+      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+        requestTimeoutDriver = requestTimeoutDriver - 1;
+
+        //when trip request is accepted by online nearest available driver
+        currentDriverRef.onValue.listen((dataSnapshot) {
+          if (dataSnapshot.snapshot.value.toString() == "accepted") {
+            timer.cancel();
+            currentDriverRef.onDisconnect();
+            requestTimeoutDriver = 20;
+          }
+        });
+        //if 20 seconds passed - send notification to next nearest online available driver
+        if (requestTimeoutDriver == 0) {
+          currentDriverRef.set("timeout");
+          timer.cancel();
+          currentDriverRef.onDisconnect();
+          requestTimeoutDriver = 20;
+
+          //send notification to next nearest online available driver
+          searchDriver3();
+        }
+      });
+    
+    
+  }
+
   void _animate() {
     setState(() {
       animationValue = animationValue == 0 ? 1 : 0;
@@ -1175,7 +1594,13 @@ updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng)
 
   @override
   Widget build(BuildContext context) {
-    makeDriverNearbyCarIcon();
+    //makeDriverNearbyCarIcon();
+    makeDriverNearbyCarIcons3Seats();
+
+    makeDriverNearbyCarIcons4Seats();
+
+    makeDriverNearbyCarIcons7Seats();
+
     return Scaffold(
       body: Stack(
         children: [
