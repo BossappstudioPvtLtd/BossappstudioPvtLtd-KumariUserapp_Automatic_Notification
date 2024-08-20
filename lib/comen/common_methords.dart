@@ -91,12 +91,10 @@ class CommonMethods {
     detailsModel.distanceValueDigits =responseFromDirectionsAPI["routes"][0]["legs"][0]["distance"]["value"];
 
 
-    print("12313323===============================${detailsModel.distanceValueDigits}");
 
     detailsModel.durationTextString =responseFromDirectionsAPI["routes"][0]["legs"][0]["duration"]["text"];
     detailsModel.durationValueDigits =responseFromDirectionsAPI["routes"][0]["legs"][0]["duration"]["value"];
    
-    print("12313323===============================${detailsModel.durationValueDigits}");
    detailsModel.encodedPoints =responseFromDirectionsAPI["routes"][0]["overview_polyline"]["points"];
 
     return detailsModel;
@@ -118,7 +116,6 @@ class CommonMethods {
   }*/
 
   String calculateFareAmountFor3Seats(DirectionDetails directionDetails) {
-    print("222222222222========================================$directionDetails");
     double distancePerKmAmount = .6;
     double durationPerMinuteAmount = 0.3;
     double baseFareAmount = 30;
@@ -128,19 +125,11 @@ class CommonMethods {
 
     double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
     
-    print("2222222222222222222222222===============================${directionDetails.distanceValueDigits}");
-    
-    print("1111111111111111===============================$distancePerKmAmount");
-    
-    print("1111111111111111===============================$totalDistanceTravelFareAmount");
     double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
     
-    print("2222222222222222222222222===============================${directionDetails.durationValueDigits}");
-    print("1111111111111111===============================$totalDurationSpendFareAmount");
 
     double overAllTotalFareAmount = baseFareAmount +   (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) *  seatFactor;
     
-    print("1111111111111111===============================$overAllTotalFareAmount");
 
     return overAllTotalFareAmount.toStringAsFixed(1);
   }
