@@ -294,69 +294,67 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                 ],
               ),
               child: Padding(
-                padding:  const EdgeInsets.symmetric(vertical: 18),
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Card(
-                      
-                          child: Container(
-                            
-                      height: 300,
-                            width: MediaQuery.of(context).size.width * .90,
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 1,color:Colors.teal),
-                                color: const Color.fromARGB(255, 26, 25, 25),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(12))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        (tripDirectionDetailsInfo != null)
-                                            ? tripDirectionDetailsInfo!
-                                                .distanceTextString!
-                                            : "",
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        (tripDirectionDetailsInfo != null)
-                                            ? tripDirectionDetailsInfo!
-                                                .durationTextString!
-                                            : "",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white70,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                      child: Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width * .90,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.teal),
+                            color: const Color.fromARGB(255, 26, 25, 25),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    (tripDirectionDetailsInfo != null)
+                                        ? tripDirectionDetailsInfo!
+                                            .distanceTextString!
+                                        : "",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  Text(
+                                    (tripDirectionDetailsInfo != null)
+                                        ? tripDirectionDetailsInfo!
+                                            .durationTextString!
+                                        : "",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: ()async {
+                                    GestureDetector(
+                                      onTap: () async {
                                         MakeTriprequst();
                                         availableNearbyOnlineDriversList =
                                             ManageDriversMethods
                                                 .nearbyOnlineDriversList;
-                                        //search driver
+
+                                        // Search driver
                                         searchDriver3();
+
                                         // Navigate to the SplashRipple page
                                         await showCupertinoModalPopup(
                                           context: context,
@@ -379,34 +377,64 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                             );
                                           },
                                         );
+
                                         // Code here will execute when returning from SplashRipple page
                                         resetAppNow(); // Reset the app state
                                         cancelRideRequest();
-
-                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                        Navigator.of(context).pop(
+                                            false); // Cancel any ride requests or similar tasks
                                       },
-                                          child: Image.asset(
-                                            "assets/logo/autorickshaw.png",
-                                            height: 100,
-                                            width: 80,
-                                          ),
-                                        ),
-                                        Text(
-                                          (tripDirectionDetailsInfo != null)
-                                              ? "₹ ${(cMethods.calculateFareAmountFor3Seats(tripDirectionDetailsInfo!)).toString()}"
-                                              : "",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                      child: Image.asset(
+                                        "assets/logo/autorickshaw.png",
+                                        height: 100,
+                                        width: 80,
+                                      ),
                                     ),
-                                    Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: ()async {
+                                    FutureBuilder<String>(
+                                      future:
+                                          cMethods.calculateFareAmountFor3Seats(
+                                              tripDirectionDetailsInfo!),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const CircularProgressIndicator(); // Show loading indicator while waiting
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error: ${snapshot.error}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasData) {
+                                          return Text(
+                                            "₹ ${snapshot.data}",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else {
+                                          return const Text(
+                                            '',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
                                         MakeTriprequst();
                                         availableNearbyOnlineDriversList =
                                             ManageDriversMethods
@@ -439,135 +467,81 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                         resetAppNow(); // Reset the app state
                                         cancelRideRequest();
 
-                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                        Navigator.of(context).pop(
+                                            false); // Cancel any ride requests or similar tasks
                                       },
-                                          child: Material(
-                                            
-                                              color:const Color.fromARGB(255, 75, 75, 75),
-                                              borderOnForeground: true,
-                                            borderRadius: BorderRadius.circular(16),
-                                            elevation: 20,
-                                            child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(16),
-                                              border: Border.all(color: Colors.grey),
-                                            ),
-                                            
-                                              child: Image.asset(
-                                                "assets/logo/cartaxi.png",
-                                                height: 80,
-                                                width: 80,
-                                              ),
-                                            ),
+                                      child: Material(
+                                        color: const Color.fromARGB(
+                                            255, 75, 75, 75),
+                                        borderOnForeground: true,
+                                        borderRadius: BorderRadius.circular(16),
+                                        elevation: 20,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border:
+                                                Border.all(color: Colors.grey),
                                           ),
-                                        ),
-                                        Text(
-                                          (tripDirectionDetailsInfo != null)
-                                              ? "₹ ${(cMethods.calculateFareAmountFor4Seats(tripDirectionDetailsInfo!)).toString()}"
-                                              : "",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: ()async {
-                                        MakeTriprequst();
-                                        availableNearbyOnlineDriversList =
-                                            ManageDriversMethods
-                                                .nearbyOnlineDriversList;
-                                        //search driver
-                                        searchDriver();
-                                        // Navigate to the SplashRipple page
-                                        await showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return CupertinoTheme(
-                                              data: const CupertinoThemeData(
-                                                brightness: Brightness
-                                                    .light, // Ensure the modal is bright
-                                              ),
-                                              child: Container(
-                                                height: 250,
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                  color: Colors.black,
-                                                ),
-                                                child: const SpalshRipple(),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                        // Code here will execute when returning from SplashRipple page
-                                        resetAppNow(); // Reset the app state
-                                        cancelRideRequest();
-
-                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
-                                      },
                                           child: Image.asset(
-                                            "assets/logo/car7.png",
-                                            height: 100,
-                                            width: 100,
+                                            "assets/logo/cartaxi.png",
+                                            height: 80,
+                                            width: 80,
                                           ),
                                         ),
-                                        Text(
-                                          (tripDirectionDetailsInfo != null)
-                                              ? "₹ ${(cMethods.calculateFareAmountFor7Seats(tripDirectionDetailsInfo!)).toString()}"
-                                              : "",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
+                                    ),
+                                    FutureBuilder<String>(
+                                      future:
+                                          cMethods.calculateFareAmountFor4Seats(
+                                              tripDirectionDetailsInfo!),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const CircularProgressIndicator(); // Show loading indicator while waiting
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error: ${snapshot.error}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasData) {
+                                          return Text(
+                                            "₹ ${snapshot.data}",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else {
+                                          return const Text(
+                                            '',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                Column(
                                   children: [
-                                    MaterialButtons(
-                                        elevationsize: 20,
-                                        fontSize: 17,
-                                        containerheight: 40,
-                                        containerwidth: 100,
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        text: "Cancel".tr(),
-                                        onTap: () {
-                                          resetAppNow();
-                                          Navigator.of(context).pop(false);
-                                        }),
-
-                                    MaterialButtons(
-                                      elevationsize: 20,
-                                      text: "Go".tr(),
-                                      fontSize: 17,
-                                      containerheight: 40,
-                                      containerwidth: 100,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
+                                    GestureDetector(
                                       onTap: () async {
                                         MakeTriprequst();
                                         availableNearbyOnlineDriversList =
                                             ManageDriversMethods
                                                 .nearbyOnlineDriversList;
                                         //search driver
-                                        searchDriver();
+                                        searchDriver7();
                                         // Navigate to the SplashRipple page
                                         await showCupertinoModalPopup(
                                           context: context,
@@ -594,16 +568,128 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                         resetAppNow(); // Reset the app state
                                         cancelRideRequest();
 
-                                        Navigator.of(context).pop( false); // Cancel any ride requests or similar tasks
+                                        Navigator.of(context).pop(
+                                            false); // Cancel any ride requests or similar tasks
+                                      },
+                                      child: Image.asset(
+                                        "assets/logo/car7.png",
+                                        height: 100,
+                                        width: 100,
+                                      ),
+                                    ),
+                                    FutureBuilder<String>(
+                                      future:
+                                          cMethods.calculateFareAmountFor7Seats(
+                                              tripDirectionDetailsInfo!),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const CircularProgressIndicator(); // Show loading indicator while waiting
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error: ${snapshot.error}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasData) {
+                                          return Text(
+                                            "₹ ${snapshot.data}",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else {
+                                          return const Text(
+                                            '',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
                                       },
                                     ),
-
-                                   
                                   ],
-                                )
+                                ),
                               ],
                             ),
-                          ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                MaterialButtons(
+                                    elevationsize: 20,
+                                    fontSize: 17,
+                                    containerheight: 40,
+                                    containerwidth: 100,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    text: "Cancel".tr(),
+                                    onTap: () {
+                                      resetAppNow();
+                                      Navigator.of(context).pop(false);
+                                    }),
+                                MaterialButtons(
+                                  elevationsize: 20,
+                                  text: "Go".tr(),
+                                  fontSize: 17,
+                                  containerheight: 40,
+                                  containerwidth: 100,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  onTap: () async {
+                                    MakeTriprequst();
+                                    availableNearbyOnlineDriversList =
+                                        ManageDriversMethods
+                                            .nearbyOnlineDriversList;
+                                    //search driver
+                                    searchDriver();
+                                    // Navigate to the SplashRipple page
+                                    await showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CupertinoTheme(
+                                          data: const CupertinoThemeData(
+                                            brightness: Brightness
+                                                .light, // Ensure the modal is bright
+                                          ),
+                                          child: Container(
+                                            height: 250,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              color: Colors.black,
+                                            ),
+                                            child: const SpalshRipple(),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    // Code here will execute when returning from SplashRipple page
+                                    resetAppNow(); // Reset the app state
+                                    cancelRideRequest();
+
+                                    Navigator.of(context).pop(
+                                        false); // Cancel any ride requests or similar tasks
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -642,36 +728,56 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
     //fit the polyline into the map
     LatLngBounds boundsLatLng;
-    if  (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOrdinates.latitude &&
-        pickupGeoGraphicCoOrdinates.longitude > dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-        boundsLatLng = LatLngBounds(southwest: dropOffDestinationGeoGraphicCoOrdinates,
-        northeast: pickupGeoGraphicCoOrdinates,); } 
-        
-else if (pickupGeoGraphicCoOrdinates.longitude > dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-         boundsLatLng = LatLngBounds( southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude, dropOffDestinationGeoGraphicCoOrdinates.longitude),
-         northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude, pickupGeoGraphicCoOrdinates.longitude),);} 
+    if (pickupGeoGraphicCoOrdinates.latitude >
+            dropOffDestinationGeoGraphicCoOrdinates.latitude &&
+        pickupGeoGraphicCoOrdinates.longitude >
+            dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: dropOffDestinationGeoGraphicCoOrdinates,
+        northeast: pickupGeoGraphicCoOrdinates,
+      );
+    } else if (pickupGeoGraphicCoOrdinates.longitude >
+        dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude,
+            dropOffDestinationGeoGraphicCoOrdinates.longitude),
+        northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
+            pickupGeoGraphicCoOrdinates.longitude),
+      );
+    } else if (pickupGeoGraphicCoOrdinates.latitude >
+        dropOffDestinationGeoGraphicCoOrdinates.latitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
+            pickupGeoGraphicCoOrdinates.longitude),
+        northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude,
+            dropOffDestinationGeoGraphicCoOrdinates.longitude),
+      );
+    } else {
+      boundsLatLng = LatLngBounds(
+        southwest: pickupGeoGraphicCoOrdinates,
+        northeast: dropOffDestinationGeoGraphicCoOrdinates,
+      );
+    }
 
-else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOrdinates.latitude) {
-         boundsLatLng = LatLngBounds( southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude, pickupGeoGraphicCoOrdinates.longitude),
-         northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude, dropOffDestinationGeoGraphicCoOrdinates.longitude),);} 
-
-   else {boundsLatLng = LatLngBounds( southwest: pickupGeoGraphicCoOrdinates, northeast: dropOffDestinationGeoGraphicCoOrdinates,);}
-
-    controllerGoogleMap!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
+    controllerGoogleMap!
+        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
 
     //add markers to pickup and dropOffDestination points
-    Marker pickUpPointMarker = Marker(markerId: const MarkerId("pickUpPointMarkerID"),
+    Marker pickUpPointMarker = Marker(
+      markerId: const MarkerId("pickUpPointMarkerID"),
       position: pickupGeoGraphicCoOrdinates,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      infoWindow: InfoWindow(title: pickUpLocation.placeName, snippet: "Pickup Location"),
+      infoWindow: InfoWindow(
+          title: pickUpLocation.placeName, snippet: "Pickup Location"),
     );
 
     Marker dropOffDestinationPointMarker = Marker(
       markerId: const MarkerId("dropOffDestinationPointMarkerID"),
       position: dropOffDestinationGeoGraphicCoOrdinates,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow: InfoWindow(title: dropOffDestinationLocation.placeName,
-      snippet: "Destination Location"),
+      infoWindow: InfoWindow(
+          title: dropOffDestinationLocation.placeName,
+          snippet: "Destination Location"),
     );
 
     setState(() {
@@ -759,7 +865,8 @@ else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOr
         eachOnlineNearbyDriver.lngDriver!,
       );
 
-      print( "============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
+      print(
+          "============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
 
       // Fetch car details from Firebase Realtime Database
       DataSnapshot snapshot = await FirebaseDatabase.instance
@@ -1287,8 +1394,7 @@ else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOr
     });
   }
 
-
-   searchDriver3() {
+  searchDriver3() {
     if (availableNearbyOnlineDriversList!.length == 0) {
       cancelRideRequest();
       resetAppNow();
@@ -1302,91 +1408,90 @@ else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOr
     sendNotificationToDriver3(currentDriver);
 
     availableNearbyOnlineDriversList!.removeAt(0);
-
   }
 
-  sendNotificationToDriver3(OnlineNearbyDrivers currentDriver) async 
-  {
-
+  sendNotificationToDriver3(OnlineNearbyDrivers currentDriver) async {
     //update driver's newTripStatus - assign tripID to current driver
-   DatabaseReference currentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("newTripStatus");
-
-   // Set the trip ID for the current driver
-   currentDriverRef.set(tripRequestRef!.key);
-
-   // Get the current driver's device recognition token
-   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("deviceToken");
-
-   print(
-      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
-
-   // Fetch device token of the current driver
-   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
-   if (tokenSnapshot.value != null) {
-    String deviceToken = tokenSnapshot.value.toString();
-
-    // Get the current driver's car details
-     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+    DatabaseReference currentDriverRef = FirebaseDatabase.instance
         .ref()
         .child("drivers")
         .child(currentDriver.uidDriver.toString())
-        .child("car_details");
+        .child("newTripStatus");
 
-     // Fetch car details including carSeats
-     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
-     if (carDetailsSnapshot.value != null) {
-      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+    // Set the trip ID for the current driver
+    currentDriverRef.set(tripRequestRef!.key);
 
-      // Check if carSeats is 3
-      if (carDetailsMap['carSeats'] == 3) {
-        // Send notification only if carSeats is 3
-        PushNotificationService.sendNotificationToSelectedDriver(
-            deviceToken, context, tripRequestRef!.key.toString());
-        print("Notification sent to driver with carSeats == 3");
+    // Get the current driver's device recognition token
+    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("deviceToken");
+
+    print(
+        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+    // Fetch device token of the current driver
+    DataSnapshot tokenSnapshot =
+        await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+    if (tokenSnapshot.value != null) {
+      String deviceToken = tokenSnapshot.value.toString();
+
+      // Get the current driver's car details
+      DatabaseReference carDetailsRef = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(currentDriver.uidDriver.toString())
+          .child("car_details");
+
+      // Fetch car details including carSeats
+      DataSnapshot carDetailsSnapshot =
+          await carDetailsRef.once().then((event) => event.snapshot);
+      if (carDetailsSnapshot.value != null) {
+        Map<dynamic, dynamic> carDetailsMap =
+            carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+        // Check if carSeats is 3
+        if (carDetailsMap['carSeats'] == 3) {
+          // Send notification only if carSeats is 3
+          PushNotificationService.sendNotificationToSelectedDriver(
+              deviceToken, context, tripRequestRef!.key.toString());
+          print("Notification sent to driver with carSeats == 3");
+        } else {
+          print("Driver does not have carSeats == 3");
+        }
       } else {
-        print("Driver does not have carSeats == 3");
+        print("Car details not found for driver.");
       }
-     } else {
-      print("Car details not found for driver.");
-     }
-      } else {
-     print("Device token not found for driver.");}
-      
-  
-      const oneTickPerSec = Duration(seconds: 1);
-      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
-        requestTimeoutDriver = requestTimeoutDriver - 1;
+    } else {
+      print("Device token not found for driver.");
+    }
 
-        //when trip request is accepted by online nearest available driver
-        currentDriverRef.onValue.listen((dataSnapshot) {
-          if (dataSnapshot.snapshot.value.toString() == "accepted") {
-            timer.cancel();
-            currentDriverRef.onDisconnect();
-            requestTimeoutDriver = 20;
-          }
-        });
-        //if 20 seconds passed - send notification to next nearest online available driver
-        if (requestTimeoutDriver == 0) {
-          currentDriverRef.set("timeout");
+    const oneTickPerSec = Duration(seconds: 1);
+    var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+      requestTimeoutDriver = requestTimeoutDriver - 1;
+
+      //when trip request is accepted by online nearest available driver
+      currentDriverRef.onValue.listen((dataSnapshot) {
+        if (dataSnapshot.snapshot.value.toString() == "accepted") {
           timer.cancel();
           currentDriverRef.onDisconnect();
           requestTimeoutDriver = 20;
-
-          //send notification to next nearest online available driver
-          searchDriver3();
         }
       });
-    
-    
+      //if 20 seconds passed - send notification to next nearest online available driver
+      if (requestTimeoutDriver == 0) {
+        currentDriverRef.set("timeout");
+        timer.cancel();
+        currentDriverRef.onDisconnect();
+        requestTimeoutDriver = 20;
+
+        //send notification to next nearest online available driver
+        searchDriver3();
+      }
+    });
   }
+
   searchDriver4() {
     if (availableNearbyOnlineDriversList!.length == 0) {
       cancelRideRequest();
@@ -1401,92 +1506,91 @@ else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOr
     sendNotificationToDriver4(currentDriver);
 
     availableNearbyOnlineDriversList!.removeAt(0);
-
   }
 
-  sendNotificationToDriver4(OnlineNearbyDrivers currentDriver) async 
-  {
-
+  sendNotificationToDriver4(OnlineNearbyDrivers currentDriver) async {
     //update driver's newTripStatus - assign tripID to current driver
-   DatabaseReference currentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("newTripStatus");
-
-   // Set the trip ID for the current driver
-   currentDriverRef.set(tripRequestRef!.key);
-
-   // Get the current driver's device recognition token
-   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("deviceToken");
-
-   print(
-      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
-
-   // Fetch device token of the current driver
-   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
-   if (tokenSnapshot.value != null) {
-    String deviceToken = tokenSnapshot.value.toString();
-
-    // Get the current driver's car details
-     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+    DatabaseReference currentDriverRef = FirebaseDatabase.instance
         .ref()
         .child("drivers")
         .child(currentDriver.uidDriver.toString())
-        .child("car_details");
+        .child("newTripStatus");
 
-     // Fetch car details including carSeats
-     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
-     if (carDetailsSnapshot.value != null) {
-      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+    // Set the trip ID for the current driver
+    currentDriverRef.set(tripRequestRef!.key);
 
-      // Check if carSeats is 4
-      if (carDetailsMap['carSeats'] == 4) {
-        // Send notification only if carSeats is 4
-        PushNotificationService.sendNotificationToSelectedDriver(
-            deviceToken, context, tripRequestRef!.key.toString());
-        print("Notification sent to driver with carSeats == 4");
+    // Get the current driver's device recognition token
+    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("deviceToken");
+
+    print(
+        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+    // Fetch device token of the current driver
+    DataSnapshot tokenSnapshot =
+        await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+    if (tokenSnapshot.value != null) {
+      String deviceToken = tokenSnapshot.value.toString();
+
+      // Get the current driver's car details
+      DatabaseReference carDetailsRef = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(currentDriver.uidDriver.toString())
+          .child("car_details");
+
+      // Fetch car details including carSeats
+      DataSnapshot carDetailsSnapshot =
+          await carDetailsRef.once().then((event) => event.snapshot);
+      if (carDetailsSnapshot.value != null) {
+        Map<dynamic, dynamic> carDetailsMap =
+            carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+        // Check if carSeats is 4
+        if (carDetailsMap['carSeats'] == 4) {
+          // Send notification only if carSeats is 4
+          PushNotificationService.sendNotificationToSelectedDriver(
+              deviceToken, context, tripRequestRef!.key.toString());
+          print("Notification sent to driver with carSeats == 4");
+        } else {
+          print("Driver does not have carSeats == 4");
+        }
       } else {
-        print("Driver does not have carSeats == 3");
+        print("Car details not found for driver.");
       }
-     } else {
-      print("Car details not found for driver.");
-     }
-      } else {
-     print("Device token not found for driver.");}
-      
-  
-      const oneTickPerSec = Duration(seconds: 1);
-      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
-        requestTimeoutDriver = requestTimeoutDriver - 1;
+    } else {
+      print("Device token not found for driver.");
+    }
 
-        //when trip request is accepted by online nearest available driver
-        currentDriverRef.onValue.listen((dataSnapshot) {
-          if (dataSnapshot.snapshot.value.toString() == "accepted") {
-            timer.cancel();
-            currentDriverRef.onDisconnect();
-            requestTimeoutDriver = 20;
-          }
-        });
-        //if 20 seconds passed - send notification to next nearest online available driver
-        if (requestTimeoutDriver == 0) {
-          currentDriverRef.set("timeout");
+    const oneTickPerSec = Duration(seconds: 1);
+    var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+      requestTimeoutDriver = requestTimeoutDriver - 1;
+
+      //when trip request is accepted by online nearest available driver
+      currentDriverRef.onValue.listen((dataSnapshot) {
+        if (dataSnapshot.snapshot.value.toString() == "accepted") {
           timer.cancel();
           currentDriverRef.onDisconnect();
           requestTimeoutDriver = 20;
-
-          //send notification to next nearest online available driver
-          searchDriver3();
         }
       });
-    
-    
+      //if 20 seconds passed - send notification to next nearest online available driver
+      if (requestTimeoutDriver == 0) {
+        currentDriverRef.set("timeout");
+        timer.cancel();
+        currentDriverRef.onDisconnect();
+        requestTimeoutDriver = 20;
+
+        //send notification to next nearest online available driver
+        searchDriver3();
+      }
+    });
   }
- searchDriver7() {
+
+  searchDriver7() {
     if (availableNearbyOnlineDriversList!.length == 0) {
       cancelRideRequest();
       resetAppNow();
@@ -1500,90 +1604,88 @@ else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOr
     sendNotificationToDriver7(currentDriver);
 
     availableNearbyOnlineDriversList!.removeAt(0);
-
   }
 
-  sendNotificationToDriver7(OnlineNearbyDrivers currentDriver) async 
-  {
-
+  sendNotificationToDriver7(OnlineNearbyDrivers currentDriver) async {
     //update driver's newTripStatus - assign tripID to current driver
-   DatabaseReference currentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("newTripStatus");
-
-   // Set the trip ID for the current driver
-   currentDriverRef.set(tripRequestRef!.key);
-
-   // Get the current driver's device recognition token
-   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
-      .ref()
-      .child("drivers")
-      .child(currentDriver.uidDriver.toString())
-      .child("deviceToken");
-
-   print(
-      "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
-
-   // Fetch device token of the current driver
-   DataSnapshot tokenSnapshot = await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
-   if (tokenSnapshot.value != null) {
-    String deviceToken = tokenSnapshot.value.toString();
-
-    // Get the current driver's car details
-     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+    DatabaseReference currentDriverRef = FirebaseDatabase.instance
         .ref()
         .child("drivers")
         .child(currentDriver.uidDriver.toString())
-        .child("car_details");
+        .child("newTripStatus");
 
-     // Fetch car details including carSeats
-     DataSnapshot carDetailsSnapshot = await carDetailsRef.once().then((event) => event.snapshot);
-     if (carDetailsSnapshot.value != null) {
-      Map<dynamic, dynamic> carDetailsMap = carDetailsSnapshot.value as Map<dynamic, dynamic>;
+    // Set the trip ID for the current driver
+    currentDriverRef.set(tripRequestRef!.key);
 
-      // Check if carSeats is 7
-      if (carDetailsMap['carSeats'] == 7) {
-        // Send notification only if carSeats is 7
-        PushNotificationService.sendNotificationToSelectedDriver(
-            deviceToken, context, tripRequestRef!.key.toString());
-        print("Notification sent to driver with carSeats == 7");
+    // Get the current driver's device recognition token
+    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+        .ref()
+        .child("drivers")
+        .child(currentDriver.uidDriver.toString())
+        .child("deviceToken");
+
+    print(
+        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+
+    // Fetch device token of the current driver
+    DataSnapshot tokenSnapshot =
+        await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+    if (tokenSnapshot.value != null) {
+      String deviceToken = tokenSnapshot.value.toString();
+
+      // Get the current driver's car details
+      DatabaseReference carDetailsRef = FirebaseDatabase.instance
+          .ref()
+          .child("drivers")
+          .child(currentDriver.uidDriver.toString())
+          .child("car_details");
+
+      // Fetch car details including carSeats
+      DataSnapshot carDetailsSnapshot =
+          await carDetailsRef.once().then((event) => event.snapshot);
+      if (carDetailsSnapshot.value != null) {
+        Map<dynamic, dynamic> carDetailsMap =
+            carDetailsSnapshot.value as Map<dynamic, dynamic>;
+
+        // Check if carSeats is 7
+        if (carDetailsMap['carSeats'] == 7) {
+          // Send notification only if carSeats is 7
+          PushNotificationService.sendNotificationToSelectedDriver(
+              deviceToken, context, tripRequestRef!.key.toString());
+          print("Notification sent to driver with carSeats == 7");
+        } else {
+          print("Driver does not have carSeats == 7");
+        }
       } else {
-        print("Driver does not have carSeats == 3");
+        print("Car details not found for driver.");
       }
-     } else {
-      print("Car details not found for driver.");
-     }
-      } else {
-     print("Device token not found for driver.");}
-      
-  
-      const oneTickPerSec = Duration(seconds: 1);
-      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
-        requestTimeoutDriver = requestTimeoutDriver - 1;
+    } else {
+      print("Device token not found for driver.");
+    }
 
-        //when trip request is accepted by online nearest available driver
-        currentDriverRef.onValue.listen((dataSnapshot) {
-          if (dataSnapshot.snapshot.value.toString() == "accepted") {
-            timer.cancel();
-            currentDriverRef.onDisconnect();
-            requestTimeoutDriver = 20;
-          }
-        });
-        //if 20 seconds passed - send notification to next nearest online available driver
-        if (requestTimeoutDriver == 0) {
-          currentDriverRef.set("timeout");
+    const oneTickPerSec = Duration(seconds: 1);
+    var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+      requestTimeoutDriver = requestTimeoutDriver - 1;
+
+      //when trip request is accepted by online nearest available driver
+      currentDriverRef.onValue.listen((dataSnapshot) {
+        if (dataSnapshot.snapshot.value.toString() == "accepted") {
           timer.cancel();
           currentDriverRef.onDisconnect();
           requestTimeoutDriver = 20;
-
-          //send notification to next nearest online available driver
-          searchDriver3();
         }
       });
-    
-    
+      //if 20 seconds passed - send notification to next nearest online available driver
+      if (requestTimeoutDriver == 0) {
+        currentDriverRef.set("timeout");
+        timer.cancel();
+        currentDriverRef.onDisconnect();
+        requestTimeoutDriver = 20;
+
+        //send notification to next nearest online available driver
+        searchDriver3();
+      }
+    });
   }
 
   void _animate() {
