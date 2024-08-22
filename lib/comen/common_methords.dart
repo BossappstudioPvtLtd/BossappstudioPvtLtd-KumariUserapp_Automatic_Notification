@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -115,64 +116,153 @@ class CommonMethods {
     return overAllTotalFareAmount.toStringAsFixed(1);
   }*/
 
-  String calculateFareAmountFor3Seats(DirectionDetails directionDetails) {
-    double distancePerKmAmount = .6;
-    double durationPerMinuteAmount = 0.3;
-    double baseFareAmount = 30;
+   Future<String> calculateFareAmountFor3Seats(DirectionDetails directionDetails) async {
+  
+  double distancePerKmAmount = .0;
+  double durationPerMinuteAmount = 0;
+  double baseFareAmount = 0;
+  
+  DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('Autorickshaw');
+
+  // Fetch the fare data from Firebase
+  DataSnapshot snapshot = await fareDataRef.get();
+
+  if (snapshot.exists) {
+    // Extract data from the snapshot
+    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
+    
+
+    baseFareAmount = vehicleFare;
+    distancePerKmAmount = kmFare;
+    durationPerMinuteAmount =minutesFare;
+
+     print("baseFareAmount=======333333333333333==============================$baseFareAmount");
+     
+     print("kmFare===============3333333333333======================$kmFare");
+     
+     print("vehicleFare====================33333333333333=================$vehicleFare");
 
     // Assuming the fare calculation is influenced by the number of seats
     double seatFactor = 3; // For 3 seats
 
-    double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
     
+        
     double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+
+    
     
 
-    double overAllTotalFareAmount = baseFareAmount +   (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) *  seatFactor;
+    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
     
 
     return overAllTotalFareAmount.toStringAsFixed(1);
   }
 
-  String calculateFareAmountFor4Seats(DirectionDetails directionDetails) {
-    double distancePerKmAmount = .6;
-    double durationPerMinuteAmount = 0.3;
-    double baseFareAmount = 50;
+  // Return a default value or error message when snapshot does not exist
+  return "Fare data not available";
+}
+
+ Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) async {
+  
+  double distancePerKmAmount = .0;
+  double durationPerMinuteAmount = 0;
+  double baseFareAmount = 0;
+  
+  DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('SUVs');
+
+  // Fetch the fare data from Firebase
+  DataSnapshot snapshot = await fareDataRef.get();
+
+  if (snapshot.exists) {
+    // Extract data from the snapshot
+    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
+    
+
+    baseFareAmount = vehicleFare;
+    distancePerKmAmount = kmFare;
+    durationPerMinuteAmount =minutesFare;
+
+     print("baseFareAmount=======444444444444444444==============================$baseFareAmount");
+     
+     print("kmFare===============44444444444444======================$kmFare");
+     
+     print("vehicleFare==================444444444444=================$vehicleFare");
 
     // Assuming the fare calculation is influenced by the number of seats
-    double seatFactor = 4; // For 4 seats
+    double seatFactor = 3; // For 3 seats
 
-    double totalDistanceTravelFareAmount =
-        (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
-    double totalDurationSpendFareAmount =
-        (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    
+        
+    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
-    double overAllTotalFareAmount = baseFareAmount +
-        (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) *
-            seatFactor;
+    
+    
+
+    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
+    
 
     return overAllTotalFareAmount.toStringAsFixed(1);
   }
 
-  String calculateFareAmountFor7Seats(DirectionDetails directionDetails) {
-    double distancePerKmAmount = .8;
-    double durationPerMinuteAmount = 0.3;
-    double baseFareAmount = 80;
+  // Return a default value or error message when snapshot does not exist
+  return "Fare data not available";
+}
+
+ Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) async {
+  
+  double distancePerKmAmount = .0;
+  double durationPerMinuteAmount = 0;
+  double baseFareAmount = 0;
+  
+  DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('premium');
+
+  // Fetch the fare data from Firebase
+  DataSnapshot snapshot = await fareDataRef.get();
+
+  if (snapshot.exists) {
+    // Extract data from the snapshot
+    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
+    
+
+    baseFareAmount = vehicleFare;
+    distancePerKmAmount = kmFare;
+    durationPerMinuteAmount =minutesFare;
+
+     print("baseFareAmount=======7777777777777777==============================$baseFareAmount");
+     
+     print("kmFare===============7777777777777777777======================$kmFare");
+     
+     print("vehicleFare===========77777777777777777=================$vehicleFare");
 
     // Assuming the fare calculation is influenced by the number of seats
-    double seatFactor = 7; // For 7 seats
+    double seatFactor = 3; // For 3 seats
 
-    double totalDistanceTravelFareAmount =
-        (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
-    double totalDurationSpendFareAmount =
-        (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    
+        
+    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
-    double overAllTotalFareAmount = baseFareAmount +
-        (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) *
-            seatFactor;
+    
+    
+
+    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
+    
 
     return overAllTotalFareAmount.toStringAsFixed(1);
   }
 
-  calculateFareAmount(DirectionDetails directionDetails) {}
+  // Return a default value or error message when snapshot does not exist
+  return "Fare data not available";
+}
 }
