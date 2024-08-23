@@ -116,153 +116,225 @@ class CommonMethods {
     return overAllTotalFareAmount.toStringAsFixed(1);
   }*/
 
-   Future<String> calculateFareAmountFor3Seats(DirectionDetails directionDetails) async {
-  
-  double distancePerKmAmount = .0;
+  Future<String> calculateFareAmountFor3Seats(DirectionDetails directionDetails) async {
+  double distancePerKmAmount = 0.0;
   double durationPerMinuteAmount = 0;
   double baseFareAmount = 0;
-  
+  double totalTaxAmount = 0;
+  double radiusValue = 0; // Variable to store radius data
+
+  // Get reference to fareData
   DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('Autorickshaw');
+  // Get reference to radiusData
+  DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("Autorickshaw");
 
   // Fetch the fare data from Firebase
-  DataSnapshot snapshot = await fareDataRef.get();
+  DataSnapshot fareSnapshot = await fareDataRef.get();
+  // Fetch the radius data from Firebase
+  DataSnapshot radiusSnapshot = await radiusDataRef.get();
 
-  if (snapshot.exists) {
-    // Extract data from the snapshot
-    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
-    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
-    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
-    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
-    
+  if (fareSnapshot.exists) {
+    // Extract data from the fareSnapshot
+    double vehicleFare = double.parse(fareSnapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(fareSnapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(fareSnapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(fareSnapshot.child('taxAmount (Gst)').value.toString());
 
     baseFareAmount = vehicleFare;
     distancePerKmAmount = kmFare;
-    durationPerMinuteAmount =minutesFare;
-
-     print("baseFareAmount=======333333333333333==============================$baseFareAmount");
-     
-     print("kmFare===============3333333333333======================$kmFare");
-     
-     print("vehicleFare====================33333333333333=================$vehicleFare");
-
-    // Assuming the fare calculation is influenced by the number of seats
-    double seatFactor = 3; // For 3 seats
-
-    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    durationPerMinuteAmount = minutesFare;
+    totalTaxAmount = taxAmount;
     
-        
-    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
-
-    
-    
-
-    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
-    
-
-    return overAllTotalFareAmount.toStringAsFixed(1);
+  } else {
+    return "Fare data not available";
   }
 
-  // Return a default value or error message when snapshot does not exist
-  return "Fare data not available";
+  if (radiusSnapshot.exists) {
+    // Extract data from the radiusSnapshot
+    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
+    
+print("========================333333333=====================$radiusValue");
+  } else {
+    // Handle case where radius data is not available
+    radiusValue = 0; // Default value or handle as needed
+  }
+  // Calculate fare based on directionDetails and radiusAmount
+
+
+ double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+// Adjust the fare amount based on radiusValue if it's greater than 0
+if (radiusValue > 0) {
+  totalDistanceTravelFareAmount *= 2;
+
 }
 
- Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) async {
-  
-  double distancePerKmAmount = .0;
+double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+
+double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
+
+// Calculate tax amount only if totalTaxAmount is greater than 0
+double overallTotalTaxAmount = 0.0;
+if (totalTaxAmount > 0) {
+  overallTotalTaxAmount = overAllTotalFareAmount * totalTaxAmount / 100;
+}
+
+double finalFareAmount = overAllTotalFareAmount + overallTotalTaxAmount;
+
+return finalFareAmount.toStringAsFixed(1);
+
+}
+
+
+//calculateFareAmountFor4Seats
+
+
+Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) async {
+  double distancePerKmAmount = 0.0;
   double durationPerMinuteAmount = 0;
   double baseFareAmount = 0;
-  
+  double totalTaxAmount = 0;
+  double radiusValue = 0; // Variable to store radius data
+
+  // Get reference to fareData
   DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('SUVs');
+  // Get reference to radiusData
+  DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("SUVs");
 
   // Fetch the fare data from Firebase
-  DataSnapshot snapshot = await fareDataRef.get();
+  DataSnapshot fareSnapshot = await fareDataRef.get();
+  // Fetch the radius data from Firebase
+  DataSnapshot radiusSnapshot = await radiusDataRef.get();
 
-  if (snapshot.exists) {
-    // Extract data from the snapshot
-    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
-    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
-    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
-    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
-    
+  if (fareSnapshot.exists) {
+    // Extract data from the fareSnapshot
+    double vehicleFare = double.parse(fareSnapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(fareSnapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(fareSnapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(fareSnapshot.child('taxAmount (Gst)').value.toString());
 
     baseFareAmount = vehicleFare;
     distancePerKmAmount = kmFare;
-    durationPerMinuteAmount =minutesFare;
-
-     print("baseFareAmount=======444444444444444444==============================$baseFareAmount");
-     
-     print("kmFare===============44444444444444======================$kmFare");
-     
-     print("vehicleFare==================444444444444=================$vehicleFare");
-
-    // Assuming the fare calculation is influenced by the number of seats
-    double seatFactor = 3; // For 3 seats
-
-    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    durationPerMinuteAmount = minutesFare;
+    totalTaxAmount = taxAmount;
     
-        
-    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
-
-    
-    
-
-    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
-    
-
-    return overAllTotalFareAmount.toStringAsFixed(1);
+  } else {
+    return "Fare data not available";
   }
 
-  // Return a default value or error message when snapshot does not exist
-  return "Fare data not available";
+  if (radiusSnapshot.exists) {
+    // Extract data from the radiusSnapshot
+    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
+    
+print("=====================44444444444444========================$radiusValue");
+  } else {
+    // Handle case where radius data is not available
+    radiusValue = 0; // Default value or handle as needed
+  }
+
+  // Calculate fare based on directionDetails and radiusAmount
+
+
+ double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+// Adjust the fare amount based on radiusValue if it's greater than 0
+if (radiusValue > 0) {
+  totalDistanceTravelFareAmount *= 2;
+
 }
 
- Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) async {
-  
-  double distancePerKmAmount = .0;
+double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+
+double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
+
+// Calculate tax amount only if totalTaxAmount is greater than 0
+double overallTotalTaxAmount = 0.0;
+if (totalTaxAmount > 0) {
+  overallTotalTaxAmount = overAllTotalFareAmount * totalTaxAmount / 100;
+}
+
+double finalFareAmount = overAllTotalFareAmount + overallTotalTaxAmount;
+
+return finalFareAmount.toStringAsFixed(1);
+
+}
+
+
+  //calculateFareAmountFor7Seats
+
+Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) async {
+  double distancePerKmAmount = 0.0;
   double durationPerMinuteAmount = 0;
   double baseFareAmount = 0;
-  
+  double totalTaxAmount = 0;
+  double radiusValue = 0; // Variable to store radius data
+
+  // Get reference to fareData
   DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('premium');
+  // Get reference to radiusData
+  DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("premium");
 
   // Fetch the fare data from Firebase
-  DataSnapshot snapshot = await fareDataRef.get();
+  DataSnapshot fareSnapshot = await fareDataRef.get();
+  // Fetch the radius data from Firebase
+  DataSnapshot radiusSnapshot = await radiusDataRef.get();
 
-  if (snapshot.exists) {
-    // Extract data from the snapshot
-    double vehicleFare = double.parse(snapshot.child('vehicle Fare').value.toString());
-    double kmFare = double.parse(snapshot.child('kmFare').value.toString().replaceAll('/km', ''));
-    double minutesFare = double.parse(snapshot.child('Minutes Fare').value.toString());
-    double taxAmount = double.parse(snapshot.child('taxAmount (Gst)').value.toString());
-    
+  if (fareSnapshot.exists) {
+    // Extract data from the fareSnapshot
+    double vehicleFare = double.parse(fareSnapshot.child('vehicle Fare').value.toString());
+    double kmFare = double.parse(fareSnapshot.child('kmFare').value.toString().replaceAll('/km', ''));
+    double minutesFare = double.parse(fareSnapshot.child('Minutes Fare').value.toString());
+    double taxAmount = double.parse(fareSnapshot.child('taxAmount (Gst)').value.toString());
 
     baseFareAmount = vehicleFare;
     distancePerKmAmount = kmFare;
-    durationPerMinuteAmount =minutesFare;
-
-     print("baseFareAmount=======7777777777777777==============================$baseFareAmount");
-     
-     print("kmFare===============7777777777777777777======================$kmFare");
-     
-     print("vehicleFare===========77777777777777777=================$vehicleFare");
-
-    // Assuming the fare calculation is influenced by the number of seats
-    double seatFactor = 3; // For 3 seats
-
-    double totalDistanceTravelFareAmount =(directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+    durationPerMinuteAmount = minutesFare;
+    totalTaxAmount = taxAmount;
     
-        
-    double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
-
-    
-    
-
-    double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount) ;
-    
-
-    return overAllTotalFareAmount.toStringAsFixed(1);
+  } else {
+    return "Fare data not available";
   }
 
-  // Return a default value or error message when snapshot does not exist
-  return "Fare data not available";
+  if (radiusSnapshot.exists) {
+    // Extract data from the radiusSnapshot
+    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
+    
+  } else {
+    // Handle case where radius data is not available
+    radiusValue = 0; // Default value or handle as needed
+  }
+
+  // Calculate fare based on directionDetails and radiusAmount
+
+
+ double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+// Adjust the fare amount based on radiusValue if it's greater than 0
+if (radiusValue > 0) {
+  totalDistanceTravelFareAmount *= 2;
+
 }
+
+double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
+
+double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
+
+// Calculate tax amount only if totalTaxAmount is greater than 0
+double overallTotalTaxAmount = 0.0;
+if (totalTaxAmount > 0) {
+  overallTotalTaxAmount = overAllTotalFareAmount * totalTaxAmount / 100;
+}
+
+double finalFareAmount = overAllTotalFareAmount + overallTotalTaxAmount;
+
+return finalFareAmount.toStringAsFixed(1);
+
+}
+
+ 
+
+ 
+
+  // Return a default value or error message when snapshot does not exist
+
 }
