@@ -149,25 +149,35 @@ class CommonMethods {
     return "Fare data not available";
   }
 
-  if (radiusSnapshot.exists) {
-    // Extract data from the radiusSnapshot
-    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
-    
-print("========================333333333=====================$radiusValue");
-  } else {
-    // Handle case where radius data is not available
-    radiusValue = 0; // Default value or handle as needed
-  }
-  // Calculate fare based on directionDetails and radiusAmount
+// Variable to hold the radius value
 
+double radiusInMeters; // Declare radiusInMeters outside the if-else block
 
- double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+if (radiusSnapshot.exists) {
+  // Extract data from the radiusSnapshot
+  radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
 
-// Adjust the fare amount based on radiusValue if it's greater than 0
-if (radiusValue > 0) {
-  totalDistanceTravelFareAmount *= 2;
+  // Convert radiusValue from kilometers to meters
+  radiusInMeters = radiusValue * 1000;
+
+} else {
+  // Handle case where radius data is not available
+  radiusValue = 0; // Default value or handle as needed
+
+  // Convert radiusValue from kilometers to meters (will still be 0)
+  radiusInMeters = radiusValue * 1000;
 
 }
+
+// Calculate fare based on directionDetails and radiusAmount
+double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+// Adjust the fare amount based on radiusInMeters if it's greater than 0
+if (radiusInMeters < directionDetails.distanceValueDigits!) {
+  totalDistanceTravelFareAmount *= 2;
+}
+
+
 
 double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
@@ -180,6 +190,7 @@ if (totalTaxAmount > 0) {
 }
 
 double finalFareAmount = overAllTotalFareAmount + overallTotalTaxAmount;
+
 
 return finalFareAmount.toStringAsFixed(1);
 
@@ -222,26 +233,36 @@ Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) a
     return "Fare data not available";
   }
 
-  if (radiusSnapshot.exists) {
-    // Extract data from the radiusSnapshot
-    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
-    
-print("=====================44444444444444========================$radiusValue");
-  } else {
-    // Handle case where radius data is not available
-    radiusValue = 0; // Default value or handle as needed
-  }
+ double radiusInMeters; // Declare radiusInMeters outside the if-else block
 
-  // Calculate fare based on directionDetails and radiusAmount
+if (radiusSnapshot.exists) {
+  // Extract data from the radiusSnapshot
+  radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
 
+  // Convert radiusValue from kilometers to meters
+  radiusInMeters = radiusValue * 1000;
 
- double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+} else {
+  // Handle case where radius data is not available
+  radiusValue = 0; // Default value or handle as needed
 
-// Adjust the fare amount based on radiusValue if it's greater than 0
-if (radiusValue > 0) {
-  totalDistanceTravelFareAmount *= 2;
+  // Convert radiusValue from kilometers to meters (will still be 0)
+  radiusInMeters = radiusValue * 1000;
 
 }
+
+// Calculate fare based on directionDetails and radiusAmount
+double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+
+
+// Adjust the fare amount based on radiusInMeters if it's greater than 0
+if (radiusInMeters < directionDetails.distanceValueDigits!) {
+  totalDistanceTravelFareAmount *= 2;
+}
+
+
+
 
 double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
@@ -254,6 +275,7 @@ if (totalTaxAmount > 0) {
 }
 
 double finalFareAmount = overAllTotalFareAmount + overallTotalTaxAmount;
+
 
 return finalFareAmount.toStringAsFixed(1);
 
@@ -272,7 +294,7 @@ Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) a
   // Get reference to fareData
   DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('premium');
   // Get reference to radiusData
-  DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("premium");
+  DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("Premium");
 
   // Fetch the fare data from Firebase
   DataSnapshot fareSnapshot = await fareDataRef.get();
@@ -291,37 +313,57 @@ Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) a
     durationPerMinuteAmount = minutesFare;
     totalTaxAmount = taxAmount;
     
+print("+++++++++++baseFareAmount+++++++++++++++++$baseFareAmount");
   } else {
     return "Fare data not available";
   }
 
-  if (radiusSnapshot.exists) {
-    // Extract data from the radiusSnapshot
-    radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
-    
-  } else {
-    // Handle case where radius data is not available
-    radiusValue = 0; // Default value or handle as needed
-  }
 
-  // Calculate fare based on directionDetails and radiusAmount
+ double radiusInMeters; // Declare radiusInMeters outside the if-else block
 
+if (radiusSnapshot.exists) {
+  // Extract data from the radiusSnapshot
+  radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
 
- double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+print("+++++++++++radiusValue+++++++++++++++++$radiusValue");
+  // Convert radiusValue from kilometers to meters
+  radiusInMeters = radiusValue * 1000;
+  
 
-// Adjust the fare amount based on radiusValue if it's greater than 0
-if (radiusValue > 0) {
-  totalDistanceTravelFareAmount *= 2;
+} else {
+  // Handle case where radius data is not available
+  radiusValue = 0; // Default value or handle as needed
+
+  // Convert radiusValue from kilometers to meters (will still be 0)
+  radiusInMeters = radiusValue * 1000;
+  
 
 }
+
+// Calculate fare based on directionDetails and radiusAmount
+double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
+
+// Adjust the fare amount based on radiusInMeters if it's greater than 0
+if (radiusInMeters < directionDetails.distanceValueDigits!) {
+  
+  totalDistanceTravelFareAmount *= 2;
+
+  
+  
+  
+}
+
+
 
 double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
 double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
 
+
 // Calculate tax amount only if totalTaxAmount is greater than 0
 double overallTotalTaxAmount = 0.0;
 if (totalTaxAmount > 0) {
+  
   overallTotalTaxAmount = overAllTotalFareAmount * totalTaxAmount / 100;
 }
 
