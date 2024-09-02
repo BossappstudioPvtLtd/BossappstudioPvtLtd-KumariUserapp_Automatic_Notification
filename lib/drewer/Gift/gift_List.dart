@@ -22,7 +22,7 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
   final Map<String, DateTime> _lastTapTimes = {};
   final String _sharedPrefsKey = 'last_tap_times';
 
-  int _countdown = 30; // Countdown starts from 10
+  int _countdown = 30; // Countdown starts from 30
   Timer? _timer;
   bool _isButtonEnabled = false; // Initially, the button is disabled
 
@@ -128,8 +128,8 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
-            Color.fromARGB(255, 17, 93, 155),
-            Color.fromARGB(255, 3, 6, 56)
+            Colors.blue,
+            Color.fromARGB(255, 3, 6, 56),
           ],
         )),
         child: Column(
@@ -139,8 +139,8 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
               children: [
                 IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back)),
-                const Text("Gift Offers", style: TextStyle(fontSize: 26)),
+                    icon: const Icon(Icons.arrow_back),color: Colors.white70,),
+                const Text("Gift Offers", style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,)),
               ],
             ),
             Expanded(
@@ -152,20 +152,62 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                        child: Text('No gift offers available'));
+                    return Center(
+                        child: Stack(
+                                children: [
+                                  Image.asset("assets/images/7_Error.png"),
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 400,
+                                        ),
+                                        const Text(
+                                          'Error!',
+                                          style: TextStyle(
+                                              fontSize: 26,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          'No giftOffers available at the moment.',
+                                          style: TextStyle(
+                                              fontSize: 18, color: Colors.grey),
+                                        ),
+                                        const SizedBox( height: 10,
+                                        ),
+                                        MaterialButtonsAnimation(
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          containerheight: 40,
+                                          containerwidth: 100,
+                                          elevationsize: 10,
+                                          text: 'Go Back',
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),);
                   }
                   return ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(20.0),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final offer = snapshot.data![index];
+                      final expiryDate = DateTime.parse(offer['expiryDate']);
+                      final isExpired = expiryDate.isBefore(DateTime.now());
+
                       return Card(
+                        color: Colors.black12,
                         margin: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              color: Colors.transparent),
+                              ),
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,21 +238,21 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
                                           'Title: ${offer['title']}',
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                              fontSize: 18,color: Colors.white),
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
                                           'Description: ${offer['description']}',
-                                          style: const TextStyle(fontSize: 16),
+                                          style: const TextStyle(fontSize: 16,color: Colors.white),
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
                                           'Post Date: ${offer['postDate']}',
-                                          style: const TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 14,color: Colors.white),
                                         ),
                                         Text(
                                           'Expiry Date: ${offer['expiryDate']}',
-                                          style: const TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 14,color: Colors.white),
                                         ),
                                       ],
                                     ),
@@ -219,19 +261,27 @@ class _GiftOfferListScreenState extends State<GiftOfferListScreen>
                               ),
                               const SizedBox(height: 16),
                               Center(
-                                child: MaterialButtonsAnimation(
-                                  text: _countdown > 0
-                                      ? 'Wait $_countdown s'
-                                      : 'Select',
-                                  containerheight: 50,
-                                  containerwidth: 150,
-                                  borderRadius: BorderRadius.circular(16),
-                                  onTap: _isButtonEnabled
-                                      ? () =>  Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const GiftPage()))
-                                      : null, // Disable tap when button is not enabled
-                                  elevationsize: 20,
-                                ),
+                                child: isExpired
+                                    ? const Text(
+                                        'Offer Expired',
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      )
+                                    : MaterialButtonsAnimation(
+                                        text: _countdown > 0
+                                            ? 'Wait $_countdown s'
+                                            : 'Select',
+                                        containerheight: 40,
+                                        containerwidth: 200,
+                                        borderRadius: BorderRadius.circular(8),
+                                        onTap: _isButtonEnabled
+                                            ? () {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const GiftPage()));}
+                                            : null, elevationsize: 20,
+                                      ),
                               ),
                             ],
                           ),

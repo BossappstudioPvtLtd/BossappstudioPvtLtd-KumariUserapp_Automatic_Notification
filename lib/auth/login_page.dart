@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:new_app/Const/global_var.dart';
+import 'package:new_app/Service/auth_gate.dart';
 import 'package:new_app/auth/forgot_password.dart';
 import 'package:new_app/auth/registering.dart';
 import 'package:new_app/comen/common_methords.dart';
 import 'package:new_app/components/applogo_area.dart';
 import 'package:new_app/components/loading_dialog.dart';
 import 'package:new_app/components/m_buttons.dart';
-import 'package:new_app/drewer/drawerhome.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if((snap.snapshot.value as Map)["blockStatus"] == "no")
           {
             userName = (snap.snapshot.value as Map)["name"];
-            Navigator.push(context, MaterialPageRoute(builder: (c)=> const Drewer()));
+            Navigator.push(context, MaterialPageRoute(builder: (c)=> const Authgate()));
           }
           else
           {

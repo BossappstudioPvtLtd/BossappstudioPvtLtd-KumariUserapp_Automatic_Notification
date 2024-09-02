@@ -18,7 +18,8 @@ class Settings extends StatefulWidget {
 }
 
 class LocalizationChecker {
-  static Future<void> changeLanguage(BuildContext context, Locale newLocale) async {
+  static Future<void> changeLanguage(
+      BuildContext context, Locale newLocale) async {
     await context.setLocale(newLocale);
   }
 }
@@ -46,59 +47,76 @@ class SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
-        title: Text(
-          "Settings".tr(),
-          style: TextStyle(
-            fontSize: 20,
-            color: Theme.of(context).colorScheme.onBackground,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.filter_list,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+     
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.blue,
+            Color.fromARGB(255, 3, 6, 56),
+          ],
+        )),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+              
               Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.person_outline,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  const SizedBox(
-                    width: 15,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    color: Colors.white70,
                   ),
                   Text(
-                    "Account".tr(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.w600,
+                    'Settings'.tr(),
+                    style: const TextStyle(
+                      // fontSize: isSmallScreen ? 20 : 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
                     ),
                   ),
+          
+                  // IconButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (_) => const AdvertisementShow()));
+                  //     },
+                  //     icon: const Icon(Icons.remove_red_eye)),
                 ],
+              ),
+               
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    const Icon(
+                      Icons.person_outline,
+                          
+                      color: Colors.white70,
+                      //Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Account".tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white70,
+                        //Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -119,14 +137,16 @@ class SettingsState extends State<Settings> {
                 },
                 text: "Edit Profile".tr(),
                 leadingicon: Icons.edit_outlined,
-                leadingiconcolor: Colors.blueGrey,
+                leadingiconcolor: Colors.teal,
                 trailing: const Icon(
                   Icons.arrow_forward_ios,
+                  color: Colors.white
                 ),
                 text1: "App Settings".tr(),
                 leadingiconcolor1: Colors.green,
                 trailing1: const Icon(
                   Icons.arrow_forward_ios,
+                  color: Colors.white
                 ),
                 onTap1: () {
                   AppSettings.openAppSettings();
@@ -134,135 +154,163 @@ class SettingsState extends State<Settings> {
                 leadingicon1: Icons.phonelink_setup,
               ),
               const SizedBox(
-                height: 40,
+              
+                height: 20,
               ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.notifications_none,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    "Notification".tr(),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    const Icon(
+                      Icons.notifications_none,
+                    color: Colors.white70
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Notification".tr(),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        //Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(
-                          Icons.notifications_active_outlined,
-                          color: Colors.amber,
-                        ),
-                        title: Text(
-                          "Notification".tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        trailing: Switch(
-                          value: _switch,
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          activeColor: Colors.green,
-                          onChanged: (bool val) {
-                            setState(() {
-                              _switch = val;
-                            });
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.sunny,
-                          color: Colors.grey,
-                        ),
-                        title: Text(
-                          "Dark Mode".tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        trailing: Consumer<UiProvider>(
-                          builder: (context, UiProvider notifier, child) {
-                            return Switch(
-                              value: notifier.isDark,
+            
+                   Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                     child: Column(
+                      children: <Widget>[
+                        Card(
+                          
+                          color: Colors.transparent,
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.notifications_active_outlined,
+                              color: Colors.amber,
+                            ),
+                            title: Text(
+                              "Notification".tr(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                
+                          color: Colors.white,
+                              ),
+                            ),
+                            trailing: Switch(
+                              value: _switch,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               activeColor: Colors.green,
-                              onChanged: (value) => notifier.changeTheme(),
-                            );
-                          },
+                              onChanged: (bool val) {
+                                setState(() {
+                                  _switch = val;
+                                });
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                        Card(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            leading: Consumer<UiProvider>(
+                              builder: (context, UiProvider notifier, child) {
+                                return Icon(
+                                  Icons.sunny,
+                                  color: notifier.isDark
+                                      ? Colors.grey
+                                      : Colors.orange, // Change color based on theme
+                                );
+                              },
+                            ),
+                            title: const Text(
+                              "Dark Mode",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                
+                          color: Colors.white,
+                              ),
+                            ),
+                            trailing: Consumer<UiProvider>(
+                              builder: (context, UiProvider notifier, child) {
+                                return Switch(
+                                  value: notifier.isDark,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  activeColor: Colors.green,
+                                  onChanged: (value) => notifier.changeTheme(),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                                       ),
+                   ),
+                
+              
               const SizedBox(
-                height: 40,
+                height: 20,
               ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.expand_more,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    "More".tr(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.w600,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    const Icon(
+                      Icons.expand_more,
+                      color: Colors.white70
+                      //color: Theme.of(context).colorScheme.onBackground,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "More".tr(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white70,
+                        //Theme.of(context).colorScheme.onBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,
               ),
               SettingListTile(
                 text: "Language".tr(),
+                
                 onTap: () {},
                 leadingicon: Icons.language_outlined,
                 leadingiconcolor: Colors.blue,
                 trailing: DropdownButtonHideUnderline(
+                  
                   child: DropdownButton<Locale>(
+                    borderRadius: BorderRadius.circular(10),
+                    dropdownColor: const Color.fromARGB(255, 5, 23, 39),
                     value: _currentLocale,
                     items: const [
                       DropdownMenuItem<Locale>(
                         value: Locale('en', 'US'),
-                        child: Text('English'),
+                        child: Text('English',style: TextStyle(color: Colors.white),),
                       ),
                       DropdownMenuItem<Locale>(
                         value: Locale('ta', 'IN'),
-                        child: Text('Tamil'),
+                        child: Text('Tamil',style: TextStyle(color: Colors.white),),
                       ),
                       DropdownMenuItem<Locale>(
                         value: Locale('ml', 'IN'),
-                        child: Text('Malayalam'),
+                        child: Text('Malayalam',style: TextStyle(color: Colors.white),),
                       ),
                     ],
                     onChanged: (Locale? newValue) {
@@ -275,81 +323,86 @@ class SettingsState extends State<Settings> {
                     },
                   ),
                 ),
-                text1: "Dark Mode".tr(),
-                leadingiconcolor1: Colors.grey,
-                leadingicon1: Icons.dark_mode_outlined,
+                text1: "Invite Friends".tr(),
+                leadingiconcolor1: Colors.blueGrey,
+                leadingicon1: Icons.person_add,
                 trailing1: const Icon(
-                  Icons.arrow_forward_ios,
+                  Icons.lock,
+                  color: Colors.white
                 ),
               ),
               const SizedBox(
                 height: 40,
               ),
-              MaterialButtons(
-                onTap: () {
-                  showCupertinoDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.black87,
-                        elevation: 20,
-                        title: TextEdt(
-                          text: 'Sign Out Your Account'.tr(),
-                          color: Colors.white,
-                          fontSize: null,
-                        ),
-                        content: TextEdt(
-                          text: 'Do you want to continue with sign out?'.tr(),
-                          fontSize: null,
-                          color: Colors.grey,
-                        ),
-                        actions: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              MaterialButtons(
-                                onTap: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                                elevationsize: 20,
-                                text: 'Cancel'.tr(),
-                                fontSize: 17,
-                                containerheight: 40,
-                                containerwidth: 100,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                onPressed: null,
-                              ),
-                              MaterialButtons(
-                                onTap: () {
-                                  _signOut();
-                                  Navigator.of(context).pop();
-                                },
-                                elevationsize: 20,
-                                text: 'Continue'.tr(),
-                                fontSize: 17,
-                                containerheight: 40,
-                                containerwidth: 100,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                onPressed: null,
-                              ),
-                            ],
-                          )
-                        ],
-                      );
-                    },
-                  );
-                },
-                containerheight: 40,
-                borderRadius: BorderRadius.circular(10),
-                meterialColor: Colors.white,
-                text: 'Sign Out'.tr(),
-                textcolor: Colors.red,
-                elevationsize: 20,
-              )
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   child: MaterialButtons(
+              //     onTap: () {
+              //       showCupertinoDialog(
+              //         context: context,
+              //         builder: (BuildContext context) {
+              //           return AlertDialog(
+              //             backgroundColor: Colors.black87,
+              //             elevation: 20,
+              //             title: TextEdt(
+              //               text: 'Sign Out Your Account'.tr(),
+              //               color: Colors.white,
+              //               fontSize: null,
+              //             ),
+              //             content: TextEdt(
+              //               text: 'Do you want to continue with sign out?'.tr(),
+              //               fontSize: null,
+              //               color: Colors.grey,
+              //             ),
+              //             actions: [
+              //               Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //                 children: [
+              //                   MaterialButtons(
+              //                     onTap: () {
+              //                       Navigator.of(context).pop(false);
+              //                     },
+              //                     elevationsize: 20,
+              //                     text: 'Cancel'.tr(),
+              //                     fontSize: 17,
+              //                     containerheight: 40,
+              //                     containerwidth: 100,
+              //                     borderRadius: const BorderRadius.all(
+              //                       Radius.circular(10),
+              //                     ),
+              //                     onPressed: null,
+              //                   ),
+              //                   MaterialButtons(
+              //                     onTap: () {
+              //                       _signOut();
+              //                       Navigator.of(context).pop();
+              //                     },
+              //                     elevationsize: 20,
+              //                     text: 'Continue'.tr(),
+              //                     fontSize: 17,
+              //                     containerheight: 40,
+              //                     containerwidth: 100,
+              //                     borderRadius: const BorderRadius.all(
+              //                       Radius.circular(10),
+              //                     ),
+              //                     onPressed: null,
+              //                   ),
+              //                 ],
+              //               )
+              //             ],
+              //           );
+              //         },
+              //       );
+              //     },
+              //     containerheight: 40,
+              //     borderRadius: BorderRadius.circular(10),
+              //     meterialColor: Colors.black38,
+              //     text: 'Sign Out'.tr(),
+              //     textcolor: Colors.white,
+              //     elevationsize: 20,
+                  
+              //   ),
+              // )
             ],
           ),
         ),

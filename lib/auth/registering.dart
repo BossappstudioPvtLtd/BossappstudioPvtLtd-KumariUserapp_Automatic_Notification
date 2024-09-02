@@ -68,8 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> uploadImageToStorage() async {
     final String imageIDName = DateTime.now().millisecondsSinceEpoch.toString();
-    final Reference referenceImage =
-        FirebaseStorage.instance.ref().child("Images").child(imageIDName);
+    final Reference referenceImage = FirebaseStorage.instance.ref().child("Images").child(imageIDName);
     final UploadTask uploadTask = referenceImage.putFile(File(imageFile!.path));
     final TaskSnapshot snapshot = await uploadTask;
     urlOfUploadedImage = await snapshot.ref.getDownloadURL();
@@ -81,66 +80,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
     registerNewUser();
   }
 
-  Future<void> registerNewUser() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) =>
-          LoadingDialog(messageText: "Registering your account"),
-    );
+  registerNewUser() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) => LoadingDialog(messageText: "Registering your account"),
+  );
 
-    try {
-      final User? userFirebase =
-          (await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailTextEditingController.text.trim(),
-        password: passwordTextEditingController.text.trim(),
-      ))
-              .user;
-
-      if (userFirebase != null) {
-        final DatabaseReference usersRef = FirebaseDatabase.instance
-            .ref()
-            .child("users")
-            .child(userFirebase.uid);
-        final Map<String, String> userDataMap = {
-          "photo": urlOfUploadedImage,
-          "name": userNameTextEditingController.text.trim(),
-          "email": emailTextEditingController.text.trim(),
-          "phone": userPhoneTextEditingController.text.trim(),
-          "id": userFirebase.uid,
-          "blockStatus": "no",
-        };
-        await usersRef.set(userDataMap);
-
-        // Sign out the user if blockStatus is "yes"
-        if (userDataMap["blockStatus"] == "yes") {
-          await FirebaseAuth.instance.signOut();
-          if (!mounted) return;
-          cMethods.displaySnackBar(
-              "Your account has been blocked by the admin.", context);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (c) => const LoginScreen()));
-          return;
-        } else {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (c) => const Drewer()));
-        }
-      }
-    } catch (errorMsg) {
+ 
+    final User? userFirebase = (await FirebaseAuth.instance
+    .createUserWithEmailAndPassword(
+      email: emailTextEditingController.text.trim(),
+      password: passwordTextEditingController.text.trim(),
+    ).catchError((errorMsg) {
       Navigator.pop(context);
       cMethods.displaySnackBar(errorMsg.toString(), context);
-    } finally {
-      if (mounted) {
-        Navigator.pop(context);
-      }
-    }
+    }))
+            .user;
+
+    if (!context.mounted) return;
+    
+    Navigator.pop(context);
+       DatabaseReference usersRef = FirebaseDatabase.instance
+          .ref()
+          .child("users")
+          .child(userFirebase!.uid);
+      final Map<String, String> userDataMap = {
+        "photo": urlOfUploadedImage,
+        "name": userNameTextEditingController.text.trim(),
+        "email": emailTextEditingController.text.trim(),
+        "phone": userPhoneTextEditingController.text.trim(),
+        "id": userFirebase.uid,
+        "blockStatus": "no",
+      };
+       usersRef.set(userDataMap);
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (c) => const Drewer()));
+    
+ 
   }
+
+
 
   Future<void> chooseImageFromGallery() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
+       setState(() {
         imageFile = pickedFile;
       });
     }

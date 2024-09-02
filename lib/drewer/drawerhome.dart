@@ -60,14 +60,17 @@ class _DrewerState extends State<Drewer> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 13, 33, 49),
-              Color.fromARGB(255, 7, 43, 84),
-            ],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
+            gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            
+            Color.fromARGB(255, 3, 6, 56),
+            Color.fromARGB(255, 7, 101, 177),
+            Color.fromARGB(255, 3, 6, 56),
+            
+          ],
+        )
         ),
         height: double.infinity,
         child: SafeArea(
@@ -103,30 +106,8 @@ class _DrewerState extends State<Drewer> with SingleTickerProviderStateMixin {
                         icon: Icons.wb_sunny_outlined,
                         text: "Brightness".tr(),
                       ),
-                      ListTiles(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>  const RiderHistory(),
-                            ),
-                          );
-                        },
-                        icon: Icons.settings_backup_restore_rounded,
-                        text: "Rider History".tr(),
-                      ),
-                      ListTiles(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const Settings(),
-                            ),
-                          );
-                        },
-                        icon: Icons.settings_outlined,
-                        text: "Settings".tr(),
-                      ),
+                    
+                      
                       ListTiles(
                         onTap: () {
                           Navigator.push(
@@ -150,6 +131,18 @@ class _DrewerState extends State<Drewer> with SingleTickerProviderStateMixin {
                         },
                         icon: CupertinoIcons.rectangle_3_offgrid_fill,
                         text: "advertisements".tr(),
+                      ),
+                      ListTiles(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const Settings(),
+                            ),
+                          );
+                        },
+                        icon: Icons.settings_outlined,
+                        text: "Settings".tr(),
                       ),
                       ListTiles(
                         onTap: () {

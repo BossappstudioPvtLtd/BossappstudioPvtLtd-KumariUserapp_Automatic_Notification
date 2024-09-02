@@ -38,9 +38,11 @@ class ExpandedContentWidget extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            location.addressLine2,
-            style: const TextStyle(color: Colors.black45),
+          Expanded(
+            child: Text(
+              location.addressLine2,
+              style: const TextStyle(color: Colors.black45),
+            ),
           ),
           StarsWidget(stars: location.starRating),
         ],
