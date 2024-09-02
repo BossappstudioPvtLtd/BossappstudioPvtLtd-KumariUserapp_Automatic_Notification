@@ -37,44 +37,49 @@ class SettingListTile extends StatefulWidget {
 class _SettingListTileState extends State<SettingListTile> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 10,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: 
-         BoxDecoration(
-              color: Theme.of(context).colorScheme.background, 
-            borderRadius:const BorderRadius.all(Radius.circular(10))),
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: widget.onTap,
-              child: ListTile(
-                leading:
-                    Icon(widget.leadingicon, color: widget.leadingiconcolor),
-                title: Text(
-                  widget.text,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                trailing:widget.trailing
-              ),
-            ),
-            GestureDetector(
-              onTap: widget.onTap1,
-              child: ListTile(
-                leading: Icon(
-                  widget.leadingicon1,
-                  color: widget.leadingiconcolor1,
-                ),
-                title: Text(
-                  widget.text1,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                 trailing:widget.trailing1,
-              ),
-            ),
-          ],
-        ),
+    return   Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: Card(
+        color: Colors.transparent,
+      
+                      child: ListTile(
+                        leading:
+                            Icon(widget.leadingicon, color: widget.leadingiconcolor),
+                        title: Text(
+                          widget.text,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),
+                        ),
+                        trailing:widget.trailing
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: widget.onTap1,
+                    child: Card(
+                      
+        color: Colors.transparent,
+                      child: ListTile(
+                        leading: Icon(
+                          widget.leadingicon1,
+                          color: widget.leadingiconcolor1,
+                        ),
+                        title: Text(
+                          widget.text1,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),
+                        ),
+                         trailing:widget.trailing1,
+                      ),
+                    ),
+                  ),
+                ],
+              
+            
+          
+        
       ),
     );
   }

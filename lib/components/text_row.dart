@@ -16,11 +16,11 @@ class _TextRowState extends State<TextRow> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("*"),
+                    const Text("*",style: TextStyle(color: Colors.white,),),
                     
                     SizedBox(
                       width: 300,
-                      child:Text(widget.data,style: const TextStyle(fontSize: 12 ),),)
+                      child:Text(widget.data,style: const TextStyle(fontSize: 12,color: Colors.white, ),),)
                   ],
                   
                 );

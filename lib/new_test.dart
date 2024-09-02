@@ -118,21 +118,12 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
   String userName = "";
 
   void getCurrentLiveLocationOfUser() async {
-    Position positionOfUser = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-    currentPositionOfUser = positionOfUser;
-    LatLng positionOfUserInLatLng = LatLng(
-        currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
-    CameraPosition cameraPosition =
-        CameraPosition(target: positionOfUserInLatLng, zoom: 15);
-    controllerGoogleMap!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
-    await CommonMethods.convertGeoGraphicCoOrdinatesIntoHumanReadableAddress(
-        currentPositionOfUser!, context);
-
+    Position positionOfUser = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);currentPositionOfUser = positionOfUser;
+    LatLng positionOfUserInLatLng = LatLng(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
+    CameraPosition cameraPosition = CameraPosition(target: positionOfUserInLatLng, zoom: 15);
+    controllerGoogleMap!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    await CommonMethods.convertGeoGraphicCoOrdinatesIntoHumanReadableAddress( currentPositionOfUser!, context);
     await getUserInfoAndCheckBlockStatus();
-
     await initializeGeoFireListener();
     showDialog(
       barrierDismissible: false,
@@ -146,10 +137,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
           child: Stack(
             children: <Widget>[
               // Your existing AdvertisementShow widget
-
               const AdvertisementShow(),
-
-              // Close button
+             // Close button
               Positioned(
                 top: 20,
                 right: 10,
@@ -265,8 +254,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     setState(() {
       tripDirectionDetailsInfo = detailsFromDirectionAPI;
     });
-    print(
-        "tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
+    debugPrint("tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
     Navigator.pop(context);
 
     showCupertinoModalPopup(
@@ -305,8 +293,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                         decoration: BoxDecoration(
                             border: Border.all(width: 1, color: Colors.teal),
                             color: const Color.fromARGB(255, 26, 25, 25),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12))),
+                            borderRadius: const BorderRadius.all(Radius.circular(12))),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -865,7 +852,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         eachOnlineNearbyDriver.lngDriver!,
       );
 
-      print(
+      debugPrint(
           "============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
 
       // Fetch car details from Firebase Realtime Database
@@ -881,12 +868,12 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         try {
           carSeats = int.parse(carDetails['carSeats'].toString());
         } catch (e) {
-          print(
+          debugPrint(
               "Error parsing carSeats for driver ID: ${eachOnlineNearbyDriver.uidDriver}, setting default value.");
           carSeats = 0; // Default value if parsing fails
         }
         BitmapDescriptor? carIcon;
-        print("============driver ID==============$carSeats");
+        debugPrint("============driver ID==============$carSeats");
 
         // Determine which car icon to use based on carSeats
         if (carSeats == 3) {
@@ -919,8 +906,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
         markersTempSet.add(driverMarker);
       } else {
-        print(
-            "No car details found for driver ID: ${eachOnlineNearbyDriver.uidDriver}");
+        debugPrint( "No car details found for driver ID: ${eachOnlineNearbyDriver.uidDriver}");
       }
     }
 
@@ -1336,8 +1322,6 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
     availableNearbyOnlineDriversList!.removeAt(0);
 
-    print(
-        "Current Driver ID:========================== ${currentDriver.uidDriver}");
   }
 
   sendNotificationToDriver(OnlineNearbyDrivers currentDriver) {
@@ -1428,9 +1412,6 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         .child(currentDriver.uidDriver.toString())
         .child("deviceToken");
 
-    print(
-        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
-
     // Fetch device token of the current driver
     DataSnapshot tokenSnapshot =
         await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
@@ -1456,15 +1437,15 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
           // Send notification only if carSeats is 3
           PushNotificationService.sendNotificationToSelectedDriver(
               deviceToken, context, tripRequestRef!.key.toString());
-          print("Notification sent to driver with carSeats == 3");
+          debugPrint("Notification sent to driver with carSeats == 3");
         } else {
-          print("Driver does not have carSeats == 3");
+          debugPrint("Driver does not have carSeats == 3");
         }
       } else {
-        print("Car details not found for driver.");
+        debugPrint("Car details not found for driver.");
       }
     } else {
-      print("Device token not found for driver.");
+      debugPrint("Device token not found for driver.");
     }
 
     const oneTickPerSec = Duration(seconds: 1);
@@ -1526,8 +1507,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         .child(currentDriver.uidDriver.toString())
         .child("deviceToken");
 
-    print(
-        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
+    
 
     // Fetch device token of the current driver
     DataSnapshot tokenSnapshot =
@@ -1554,15 +1534,15 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
           // Send notification only if carSeats is 4
           PushNotificationService.sendNotificationToSelectedDriver(
               deviceToken, context, tripRequestRef!.key.toString());
-          print("Notification sent to driver with carSeats == 4");
+          debugPrint("Notification sent to driver with carSeats == 4");
         } else {
-          print("Driver does not have carSeats == 4");
+          debugPrint("Driver does not have carSeats == 4");
         }
       } else {
-        print("Car details not found for driver.");
+        debugPrint("Car details not found for driver.");
       }
     } else {
-      print("Device token not found for driver.");
+      debugPrint("Device token not found for driver.");
     }
 
     const oneTickPerSec = Duration(seconds: 1);
@@ -1624,8 +1604,6 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         .child(currentDriver.uidDriver.toString())
         .child("deviceToken");
 
-    print(
-        "Current Driver sendNotificationToDriver ID:======22222222222222==================== ${currentDriver.uidDriver}");
 
     // Fetch device token of the current driver
     DataSnapshot tokenSnapshot =
@@ -1652,15 +1630,15 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
           // Send notification only if carSeats is 7
           PushNotificationService.sendNotificationToSelectedDriver(
               deviceToken, context, tripRequestRef!.key.toString());
-          print("Notification sent to driver with carSeats == 7");
+          debugPrint("Notification sent to driver with carSeats == 7");
         } else {
-          print("Driver does not have carSeats == 7");
+          debugPrint("Driver does not have carSeats == 7");
         }
       } else {
-        print("Car details not found for driver.");
+        debugPrint("Car details not found for driver.");
       }
     } else {
-      print("Device token not found for driver.");
+      debugPrint("Device token not found for driver.");
     }
 
     const oneTickPerSec = Duration(seconds: 1);

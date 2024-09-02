@@ -13,13 +13,14 @@ class _CardListTILeState extends State<CardListTILe> {
   @override
   Widget build(BuildContext context) {
     return   Card(
-       color:Theme.of(context).colorScheme.background,
+       color:Colors.transparent,
             child: ListTile(
+              
               onTap:widget.onTap
               ,
-              title:  Text(widget.title,
+              title:  Text(widget.title,style: const TextStyle(color: Colors.white),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios_sharp),
+              trailing: const Icon(Icons.arrow_forward_ios_sharp,color: Colors.white,),
             ),
           );
   }

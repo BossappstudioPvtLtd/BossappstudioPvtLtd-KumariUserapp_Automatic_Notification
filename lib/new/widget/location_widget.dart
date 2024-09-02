@@ -63,7 +63,7 @@ class _LocationWidgetState extends State<LocationWidget> {
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 600),
-            bottom: isExpanded ? 150 : 100,
+            bottom: isExpanded ? 180 : 100,
             child: GestureDetector(
               onPanUpdate: onPanUpdate,
               onTap: () {},

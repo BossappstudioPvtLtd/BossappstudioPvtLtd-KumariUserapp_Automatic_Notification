@@ -112,10 +112,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (_) => PrifileEdt(
-                                                          name:"${data['name']}",
-                                                          email:" ${data['email']}",
-                                                          phone:"${data['phone']}",
-                                                          photo:"${data['photo']}")));
+                                                         
+                                                name: "${data['name']}" .toString(),
+                                                email: "${data['email']}" .toString(),
+                                                phone: "${data['phone']}" .toString(),
+                                                photo: "${data['photo']}" .toString(),
+                                                          )
+                                                          )
+                                                          );
                                             }),
                                       )
                                     ],

@@ -135,6 +135,8 @@ class PageListGuideAr extends StatelessWidget {
     },
   ];
 
+   PageListGuideAr({super.key});
+
   @override
   Widget build(BuildContext context) {
     // SystemUiOverlayStyle : Especifica una preferencia para el estilo de la barra de estado del sistema

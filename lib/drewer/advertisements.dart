@@ -36,6 +36,7 @@ class Advertisement {
 }
 
 class AdvertisementListScreen extends StatefulWidget {
+  
   const AdvertisementListScreen({super.key});
 
   @override
@@ -115,23 +116,24 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: const Icon(Icons.arrow_back)),
+                      icon: const Icon(Icons.arrow_back),color: Colors.white70,),
                   Text(
-                    'Advertisements',
-                    style: TextStyle(
-                      fontSize: isSmallScreen ? 20 : 18,
+                    'Advertisements'.tr(),
+                    style: const TextStyle(
+                     // fontSize: isSmallScreen ? 20 : 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.white70,
                     ),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const AdvertisementShow()));
-                      },
-                      icon: const Icon(Icons.remove_red_eye)),
+
+                  // IconButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (_) => const AdvertisementShow()));
+                  //     },
+                  //     icon: const Icon(Icons.remove_red_eye)),
                 ],
               ),
             ),
@@ -202,9 +204,11 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20,),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
                                   child: Card(
-                                    color: Colors.white12,
+                                    color: Colors.black12,
                                     elevation: 20,
                                     shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
@@ -218,9 +222,12 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(16),
-                                                topRight: Radius.circular(16)),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
                                             child: CachedNetworkImage(
                                               imageUrl: advertisement.imageUrl,
                                               height: 200,
@@ -235,7 +242,6 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                                                       const Icon(Icons.error),
                                             ),
                                           ),
-                                         
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 16, right: 16),
@@ -276,13 +282,13 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                                                   ? Flexible(
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsets.all(
-                                                                8.0),
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: AnimatedTextKit(
                                                           totalRepeatCount: 100,
                                                           animatedTexts: [
                                                             ColorizeAnimatedText(
-                                                              'Expired',
+                                                              'Offer Expired',
                                                               textStyle:
                                                                   const TextStyle(
                                                                 fontSize: 16.0,
@@ -307,11 +313,12 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                                                   : Flexible(
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsets.all(
-                                                                8),
+                                                            const EdgeInsets
+                                                                .all(8),
                                                         child: Text(
                                                           'Expires on: ${DateFormat.yMMMd().format(expiryDate)}',
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             color: Colors.blue,
                                                           ),
                                                         ),
