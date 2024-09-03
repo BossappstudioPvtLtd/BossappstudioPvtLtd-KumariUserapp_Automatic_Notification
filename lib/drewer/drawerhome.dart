@@ -130,7 +130,7 @@ class _DrewerState extends State<Drewer> with SingleTickerProviderStateMixin {
                           );
                         },
                         icon: CupertinoIcons.rectangle_3_offgrid_fill,
-                        text: "advertisements".tr(),
+                        text: "Advertisements".tr(),
                       ),
                       ListTiles(
                         onTap: () {

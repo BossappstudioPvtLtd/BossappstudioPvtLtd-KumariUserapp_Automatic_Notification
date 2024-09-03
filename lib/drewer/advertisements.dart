@@ -45,8 +45,7 @@ class AdvertisementListScreen extends StatefulWidget {
 }
 
 class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
-  final DatabaseReference _databaseReference =
-      FirebaseDatabase.instance.reference().child('advertisements');
+  final DatabaseReference _databaseReference =FirebaseDatabase.instance.reference().child('advertisements');
   List<Advertisement> _advertisementList = [];
   bool _errorOccurred = false; // Flag to track errors
 
@@ -117,8 +116,7 @@ class _AdvertisementListScreenState extends State<AdvertisementListScreen> {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back),color: Colors.white70,),
-                  Text(
-                    'Advertisements'.tr(),
+                  Text('Advertisements'.tr(),
                     style: const TextStyle(
                      // fontSize: isSmallScreen ? 20 : 18,
                       fontWeight: FontWeight.bold,

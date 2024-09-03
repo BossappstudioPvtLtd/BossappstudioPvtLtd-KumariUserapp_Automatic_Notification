@@ -16,7 +16,8 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:const Color.fromARGB(255, 3, 22, 60),
+      backgroundColor:Colors.transparent,
+      //Color.fromARGB(255, 3, 22, 60),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -61,6 +62,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
 
     return Column(
       children: [
+        const SizedBox(height: 20,),
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -74,7 +76,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
                   color: const Color.fromARGB(255, 3, 22, 60),
-                  elevation: 2,
+                  elevation: 20,
                   shadowColor: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
