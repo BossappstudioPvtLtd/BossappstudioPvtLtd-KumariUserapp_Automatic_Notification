@@ -328,11 +328,11 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                               ),
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Column(
+                              const  Column(
                                   children: [
-                                    GestureDetector(
+                                   /* GestureDetector(
                                       onTap: () async {
                                         MakeTriprequst();
                                         availableNearbyOnlineDriversList =
@@ -415,7 +415,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                           );
                                         }
                                       },
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                                 Column(
@@ -465,45 +465,24 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                         elevation: 20,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            border:
-                                                Border.all(color: Colors.grey),
-                                          ),
-                                          child: Image.asset(
-                                            "assets/logo/cartaxi.png",
-                                            height: 80,
-                                            width: 80,
-                                          ),
+                                            borderRadius:BorderRadius.circular(16),
+                                            border: Border.all(color: Colors.grey), ),
+                                          child: Image.asset("assets/logo/cartaxi.png", height: 80, width: 80,),
                                         ),
                                       ),
-                                    ),
+                                    ), const SizedBox(
+                              height: 10,
+                            ),
                                     FutureBuilder<String>(
-                                      future:
-                                          cMethods.calculateFareAmountFor4Seats(
-                                              tripDirectionDetailsInfo!),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<String> snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
+                                      future:cMethods.calculateFareAmountFor4Seats( tripDirectionDetailsInfo!),
+                                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.connectionState ==ConnectionState.waiting) {
                                           return const CircularProgressIndicator(); // Show loading indicator while waiting
                                         } else if (snapshot.hasError) {
-                                          return Text(
-                                            'Error: ${snapshot.error}',
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          );
+                                          return Text('Error: ${snapshot.error}',
+                                            style: const TextStyle( fontSize: 18,color: Colors.red,fontWeight: FontWeight.bold,),);
                                         } else if (snapshot.hasData) {
-                                          return Text(
-                                            "₹ ${snapshot.data}",
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white70,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          return Text("₹ ${snapshot.data}",style: const TextStyle(fontSize: 18,color: Colors.white70,fontWeight: FontWeight.bold,),
                                           );
                                         } else {
                                           return const Text(
@@ -519,6 +498,9 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(
+                              height: 10,
+                            ),
                                 Column(
                                   children: [
                                     GestureDetector(
@@ -558,12 +540,25 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                                         Navigator.of(context).pop(
                                             false); // Cancel any ride requests or similar tasks
                                       },
-                                      child: Image.asset(
-                                        "assets/logo/car7.png",
-                                        height: 100,
-                                        width: 100,
-                                      ),
+                                    child:  Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      child: Material(
+                                          color: const Color.fromARGB(
+                                              255, 75, 75, 75),
+                                          borderOnForeground: true,
+                                          borderRadius: BorderRadius.circular(16),
+                                          elevation: 20,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:BorderRadius.circular(16),
+                                              border: Border.all(color: Colors.grey), ),
+                                            child: Image.asset( "assets/logo/car7.png", height: 80, width: 80,),
+                                          ),
+                                        ),
                                     ),
+                                     
+                                    ),
+                                    const SizedBox(height: 10),
                                     FutureBuilder<String>(
                                       future:
                                           cMethods.calculateFareAmountFor7Seats(

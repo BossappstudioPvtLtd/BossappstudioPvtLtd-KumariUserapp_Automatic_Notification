@@ -1,5 +1,5 @@
-// ignore_for_file: unused_element, non_constant_identifier_names, deprecated_member_use
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +10,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:new_app/navigatinbar/profile_edt.dart';
+import 'package:new_app/navigatinbar/popup_image_page.dart'; // Import the new popup image page
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -47,9 +48,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition( desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks =await placemarkFromCoordinates(position.latitude, position.longitude);
-    setState(() { _locationMessage ='${placemarks[0].name}, ${placemarks[0].locality}, ${placemarks[0].country}';});
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    setState(() {
+      _locationMessage =
+          '${placemarks[0].name}, ${placemarks[0].locality}, ${placemarks[0].country}';
+    });
   }
 
   User? currentUser = FirebaseAuth.instance.currentUser;
@@ -86,7 +92,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Image.asset(
                                       "assets/images/taxi.jpg",
                                       fit: BoxFit.cover,
-                                     
                                     ),
                                   ),
                                   Row(
@@ -110,16 +115,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                             onPressed: () {
                                               Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(
-                                                      builder: (_) => PrifileEdt(
-                                                         
-                                                name: "${data['name']}" .toString(),
-                                                email: "${data['email']}" .toString(),
-                                                phone: "${data['phone']}" .toString(),
-                                                photo: "${data['photo']}" .toString(),
-                                                          )
-                                                          )
-                                                          );
+                                                   MaterialPageRoute(
+                                                      builder:
+                                                          (_) => PrifileEdt(
+                                                                name: "${data['name']}"
+                                                                    .toString(),
+                                                                email: "${data['email']}"
+                                                                    .toString(),
+                                                                phone: "${data['phone']}"
+                                                                    .toString(),
+                                                                photo: "${data['photo']}"
+                                                                    .toString(),
+                                                              )));
                                             }),
                                       )
                                     ],
@@ -131,24 +138,46 @@ class _ProfilePageState extends State<ProfilePage> {
                                 margin: const EdgeInsets.only(top: 160),
                                 child: Column(
                                   children: <Widget>[
-                                    CircleAvatar(
-                                      radius: 42,
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 9, 77, 77),
-                                      child: CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor: Colors.white,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(50)),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            child: Image.network(
-                                                "${data['photo']}",
+                                    GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return PopupImagePage(
+                                              imageUrl: "${data['photo']}",
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Hero(
+                                        tag: 'profileImage',
+                                        child: CircleAvatar(
+                                          radius: 42,
+                                          backgroundColor: const Color.fromARGB(255, 9, 77, 77),
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundColor: Colors.white,
+                                            child: ClipRRect(
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(50)),
+                                              child: CachedNetworkImage(
+                                                imageUrl: "${data['photo']}",
                                                 width: 75,
                                                 height: 75,
-                                                fit: BoxFit.cover),
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Center(
+                                                  child: Icon(Icons.error,
+                                                      color: Colors.red),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -163,104 +192,107 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: const TextStyle(fontSize: 20),
                           ),
                           const SizedBox(height: 10.0),
-                          Column(children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "User Information".tr(),
-                                style: TextStyle(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.background,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Card(
-                              elevation: 10,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onInverseSurface,
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+                            child: Column(children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, bottom: 4.0),
                                 alignment: Alignment.topLeft,
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        ...ListTile.divideTiles(
-                                          color: Colors.grey,
-                                          tiles: [
-                                            ListTile(
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 4),
-                                              leading: Icon(
-                                                Icons.my_location,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                              ),
-                                              title: Text("Location".tr()),
-                                              subtitle: Text(
-                                                _locationMessage,
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onBackground,
-                                                ),
-                                              ),
-                                            ),
-                                            ListTile(
-                                              leading: Icon(
-                                                Icons.email,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                              ),
-                                              title: Text("Email".tr()),
-                                              subtitle: Text(
-                                                "${data['email']}",
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onBackground,
-                                                ),
-                                              ),
-                                            ),
-                                            ListTile(
-                                              leading: Icon(
-                                                Icons.phone_iphone_sharp,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                              ),
-                                              title: Text("Phone".tr()),
-                                              subtitle: Text(
-                                                "${data['phone']}",
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onBackground,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  ],
+                                child: Text(
+                                  "User Information".tr(),
+                                  style: TextStyle(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.background,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
                               ),
-                            )
-                          ]),
+                              Card(
+                                elevation: 10,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onInverseSurface,
+                                  ),
+                                  alignment: Alignment.topLeft,
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          ...ListTile.divideTiles(
+                                            color: Colors.grey,
+                                            tiles: [
+                                              ListTile(
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 4),
+                                                leading: Icon(
+                                                  Icons.my_location,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onBackground,
+                                                ),
+                                                title: Text("Location".tr()),
+                                                subtitle: Text(
+                                                  _locationMessage,
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground,
+                                                  ),
+                                                ),
+                                              ),
+                                              ListTile(
+                                                leading: Icon(
+                                                  Icons.email,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onBackground,
+                                                ),
+                                                title: Text("Email".tr()),
+                                                subtitle: Text(
+                                                  "${data['email']}",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground,
+                                                  ),
+                                                ),
+                                              ),
+                                              ListTile(
+                                                leading: Icon(
+                                                  Icons.phone_iphone_sharp,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onBackground,
+                                                ),
+                                                title: Text("Phone".tr()),
+                                                subtitle: Text(
+                                                  "${data['phone']}",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ]),
+                          ),
                         ],
                       ),
                     );

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -122,23 +123,23 @@ class _PrifileEdtState extends State<PrifileEdt> {
           children: [
             Stack(
               children: [
-                GestureDetector(
-                  onTap: getImage,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(40),
-                    elevation: 15,
-                    child: CircleAvatar(
-                      radius: 43,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: _image != null
-                            ? FileImage(_image!) as ImageProvider
-                            : NetworkImage(widget.photo),
-                      ),
-                    ),
-                  ),
-                ),
+               GestureDetector(
+  onTap: getImage,
+  child: Material(
+    borderRadius: BorderRadius.circular(40),
+    elevation: 15,
+    child: CircleAvatar(
+      radius: 43,
+      backgroundColor: Colors.white,
+      child: CircleAvatar(
+        radius: 40,
+        backgroundImage: _image != null
+            ? FileImage(_image!) as ImageProvider
+            : CachedNetworkImageProvider(widget.photo),
+      ),
+    ),
+  ),
+),
                 Padding(
                   padding: const EdgeInsets.only(top: 60, left: 60),
                   child: InkWell(

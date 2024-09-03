@@ -66,6 +66,7 @@ class _HelpState extends State<Help> {
          
                 children: [
                  
+        const SizedBox(height: 50,),
                   Center(
                     child: CircleAvatar(
                       radius: 45,
