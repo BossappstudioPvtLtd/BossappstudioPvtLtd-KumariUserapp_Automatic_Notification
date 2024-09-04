@@ -34,7 +34,7 @@ class About extends StatelessWidget {
                       },
                       icon: const Icon(Icons.arrow_back,color: Colors.white70,)),
                   Text(
-                    'Help Center'.tr(),
+                    'About'.tr(),
                     style: const TextStyle(
                      // fontSize: isSmallScreen ? 20 : 18,
                       fontWeight: FontWeight.bold,

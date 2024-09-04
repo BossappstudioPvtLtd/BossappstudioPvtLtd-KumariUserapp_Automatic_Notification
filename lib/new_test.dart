@@ -29,7 +29,6 @@ import 'package:new_app/components/splashripple.dart';
 import 'package:new_app/navigatinbar/botton_navigtion.dart';
 import 'package:new_app/navigatinbar/damo.dart';
 import 'package:new_app/navigatinbar/trips_history_page.dart';
-
 import 'package:new_app/search_destination.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -254,7 +253,6 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     setState(() {
       tripDirectionDetailsInfo = detailsFromDirectionAPI;
     });
-    debugPrint("tripDirectionDetailsInfo======================================$tripDirectionDetailsInfo");
     Navigator.pop(context);
 
     showCupertinoModalPopup(
@@ -812,6 +810,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
       carDetailsDriver = "";
       tripStatusDisplay = 'Driver is Arriving';
     });
+     Restart.restartApp();
+
   }
 
   cancelRideRequest() {
@@ -1085,23 +1085,15 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
       if (status == "ended") {
         if ((eventSnapshot.snapshot.value as Map)["fareAmount"] != null) {
-          double fareAmount = double.parse(
-              (eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
-
-          var responseFromPaymentDialog = await showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                PaymentDialog(fareAmount: fareAmount.toString()),
+          double fareAmount = double.parse((eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
+        var responseFromPaymentDialog = await showDialog( context: context,
+            builder: (BuildContext context) => PaymentDialog(fareAmount: fareAmount.toString()),
           );
-          if (responseFromPaymentDialog == "paid") {
-            tripRequestRef!.onDisconnect();
+          if (responseFromPaymentDialog == "paid") { tripRequestRef!.onDisconnect();
             tripRequestRef = null;
-
             tripStreamSubscription!.cancel();
             tripStreamSubscription = null;
-
             resetAppNow();
-
             Restart.restartApp();
           }
         }
@@ -1119,27 +1111,18 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
       backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Container(
-          height: 300,
+        return Container(height: 300,
           decoration: const BoxDecoration(
             color: Colors.black87,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white24,
-                blurRadius: 15.0,
-                spreadRadius: 0.5,
-                offset: Offset(0.7, 0.7),
-              ),
-            ],
+            boxShadow: [ BoxShadow(color: Colors.white24, blurRadius: 15.0,spreadRadius: 0.5, offset: Offset(0.7, 0.7),),],
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 5),
                 // Trip status display text
@@ -1150,11 +1133,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                       stream: tripStatusDisplayController.stream,
                       initialData: tripStatusDisplay,
                       builder: (context, snapshot) {
-                        return Text(
-                          snapshot.data ?? '',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
+                        return Text(snapshot.data ?? '',style: 
+                        const TextStyle(fontSize: 16, color: Colors.green,
                           ),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
@@ -1165,17 +1145,11 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                   ],
                 ),
                 const SizedBox(height: 19),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipOval(
+                Row( mainAxisAlignment: MainAxisAlignment.center,
+                  children: [ ClipOval(
                       child: Image.network(
-                        photoDriver == ''
-                            ? "https://firebasestorage.googleapis.com/v0/b/myapiprojects-425308.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
-                            : photoDriver,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
+                        photoDriver == '' ? "https://firebasestorage.googleapis.com/v0/b/myapiprojects-425308.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
+                            : photoDriver, width: 60, height: 60,fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -1183,51 +1157,23 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          nameDriver,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Text(
-                          carDetailsDriver,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        Text(nameDriver,style: const TextStyle(fontSize: 20,color: Colors.grey,),),
+                        Text(carDetailsDriver,style: const TextStyle(fontSize: 14,color: Colors.grey,),),
                       ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 19),
-                const Divider(
-                  height: 1,
-                  color: Colors.white70,
-                  thickness: 1,
-                ),
+                const Divider(height: 1,color: Colors.white70,thickness: 1,),
                 const SizedBox(height: 19),
                 // Call driver button
                 GestureDetector(
-                  onTap: () {
-                    launchUrl(Uri.parse("tel://$phoneNumberDriver"));
-                  },
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 21,
-                        backgroundColor: Colors.green,
-                        child: CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Colors.green,
-                          child: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.black,
-                            child: Icon(
-                              Icons.phone,
-                              color: Colors.green,
+                  onTap: () { launchUrl(Uri.parse("tel://$phoneNumberDriver"));},
+                  child: const Column( crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [ CircleAvatar( radius: 21, backgroundColor: Colors.green,
+                        child: CircleAvatar(radius: 22, backgroundColor: Colors.green,
+                          child: CircleAvatar(radius: 18, backgroundColor: Colors.black,
+                            child: Icon(  Icons.phone, color: Colors.green,
                             ),
                           ),
                         ),
@@ -1244,61 +1190,25 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
   }
 
   updateFromDriverCurrentLocationToPickUp(driverCurrentLocationLatLng) async {
-    if (!requestingDirectionDetailsInfo) {
-      requestingDirectionDetailsInfo = true;
-
-      var userPickUpLocationLatLng = LatLng(
-          currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
-
-      var directionDetailsPickup =
-          await CommonMethods.getDirectionDetailsFromAPI(
-              driverCurrentLocationLatLng, userPickUpLocationLatLng);
-
-      if (directionDetailsPickup == null) {
-        return;
-      }
-
-      tripStatusDisplayController.add(
-          "Driver is Coming - ${directionDetailsPickup.durationTextString}");
-
-      requestingDirectionDetailsInfo = false;
-    }
-  }
-
-  updateFromDriverCurrentLocationToDropOffDestination(
-      driverCurrentLocationLatLng) async {
-    if (!requestingDirectionDetailsInfo) {
-      requestingDirectionDetailsInfo = true;
-
-      var dropOffLocation =
-          Provider.of<AppInfo>(context, listen: false).dropOffLocation;
-      var userDropOffLocationLatLng = LatLng(dropOffLocation!.latitudePosition!,
-          dropOffLocation.longitudePosition!);
-
-      var directionDetailsPickup =
-          await CommonMethods.getDirectionDetailsFromAPI(
-              driverCurrentLocationLatLng, userDropOffLocationLatLng);
-
-      if (directionDetailsPickup == null) {
-        return;
-      }
-
-      tripStatusDisplayController.add(
-          "Driving to DropOff Location\n- ${directionDetailsPickup.durationTextString}");
-
-      requestingDirectionDetailsInfo = false;
-    }
-  }
+    if (!requestingDirectionDetailsInfo) {requestingDirectionDetailsInfo = true;
+       var userPickUpLocationLatLng = LatLng(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
+       var directionDetailsPickup = await CommonMethods.getDirectionDetailsFromAPI( driverCurrentLocationLatLng, userPickUpLocationLatLng);
+    if (directionDetailsPickup == null) { return;}
+        tripStatusDisplayController.add("Driver is Coming - ${directionDetailsPickup.durationTextString}");
+        requestingDirectionDetailsInfo = false;}}
+  updateFromDriverCurrentLocationToDropOffDestination(driverCurrentLocationLatLng) async {
+    if (!requestingDirectionDetailsInfo) {requestingDirectionDetailsInfo = true;
+       var dropOffLocation = Provider.of<AppInfo>(context, listen: false).dropOffLocation;
+       var userDropOffLocationLatLng = LatLng(dropOffLocation!.latitudePosition!,dropOffLocation.longitudePosition!);
+       var directionDetailsPickup =await CommonMethods.getDirectionDetailsFromAPI(driverCurrentLocationLatLng, userDropOffLocationLatLng);
+   if (directionDetailsPickup == null) {return;}
+       tripStatusDisplayController.add("Driving to DropOff Location\n- ${directionDetailsPickup.durationTextString}");
+       requestingDirectionDetailsInfo = false;}}
 
   noDriverAvailable() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => InfoDialog(
+    showDialog(context: context,barrierDismissible: false, builder: (BuildContext context) => InfoDialog(
               title: "No Driver Available".tr(),
-              description:
-                  "No driver found in the nearby location. Please try again shortly."
-                      .tr(),
+              description:"No driver found in the nearby location. Please try again shortly.".tr(),
             ));
   }
 
@@ -1373,100 +1283,100 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     });
   }
 
-  searchDriver3() {
-    if (availableNearbyOnlineDriversList!.length == 0) {
-      cancelRideRequest();
-      resetAppNow();
-      noDriverAvailable();
-      return;
-    }
+  // searchDriver3() {
+  //   if (availableNearbyOnlineDriversList!.length == 0) {
+  //     cancelRideRequest();
+  //     resetAppNow();
+  //     noDriverAvailable();
+  //     return;
+  //   }
 
-    var currentDriver = availableNearbyOnlineDriversList![0];
+  //   var currentDriver = availableNearbyOnlineDriversList![0];
 
-    //send notification to this currentDriver - currentDriver means selected driver
-    sendNotificationToDriver3(currentDriver);
+  //   //send notification to this currentDriver - currentDriver means selected driver
+  //   sendNotificationToDriver3(currentDriver);
 
-    availableNearbyOnlineDriversList!.removeAt(0);
-  }
+  //   availableNearbyOnlineDriversList!.removeAt(0);
+  // }
 
-  sendNotificationToDriver3(OnlineNearbyDrivers currentDriver) async {
-    //update driver's newTripStatus - assign tripID to current driver
-    DatabaseReference currentDriverRef = FirebaseDatabase.instance
-        .ref()
-        .child("drivers")
-        .child(currentDriver.uidDriver.toString())
-        .child("newTripStatus");
+  // sendNotificationToDriver3(OnlineNearbyDrivers currentDriver) async {
+  //   //update driver's newTripStatus - assign tripID to current driver
+  //   DatabaseReference currentDriverRef = FirebaseDatabase.instance
+  //       .ref()
+  //       .child("drivers")
+  //       .child(currentDriver.uidDriver.toString())
+  //       .child("newTripStatus");
 
-    // Set the trip ID for the current driver
-    currentDriverRef.set(tripRequestRef!.key);
+  //   // Set the trip ID for the current driver
+  //   currentDriverRef.set(tripRequestRef!.key);
 
-    // Get the current driver's device recognition token
-    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
-        .ref()
-        .child("drivers")
-        .child(currentDriver.uidDriver.toString())
-        .child("deviceToken");
+  //   // Get the current driver's device recognition token
+  //   DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+  //       .ref()
+  //       .child("drivers")
+  //       .child(currentDriver.uidDriver.toString())
+  //       .child("deviceToken");
 
-    // Fetch device token of the current driver
-    DataSnapshot tokenSnapshot =
-        await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
-    if (tokenSnapshot.value != null) {
-      String deviceToken = tokenSnapshot.value.toString();
+  //   // Fetch device token of the current driver
+  //   DataSnapshot tokenSnapshot =
+  //       await tokenOfCurrentDriverRef.once().then((event) => event.snapshot);
+  //   if (tokenSnapshot.value != null) {
+  //     String deviceToken = tokenSnapshot.value.toString();
 
-      // Get the current driver's car details
-      DatabaseReference carDetailsRef = FirebaseDatabase.instance
-          .ref()
-          .child("drivers")
-          .child(currentDriver.uidDriver.toString())
-          .child("car_details");
+  //     // Get the current driver's car details
+  //     DatabaseReference carDetailsRef = FirebaseDatabase.instance
+  //         .ref()
+  //         .child("drivers")
+  //         .child(currentDriver.uidDriver.toString())
+  //         .child("car_details");
 
-      // Fetch car details including carSeats
-      DataSnapshot carDetailsSnapshot =
-          await carDetailsRef.once().then((event) => event.snapshot);
-      if (carDetailsSnapshot.value != null) {
-        Map<dynamic, dynamic> carDetailsMap =
-            carDetailsSnapshot.value as Map<dynamic, dynamic>;
+  //     // Fetch car details including carSeats
+  //     DataSnapshot carDetailsSnapshot =
+  //         await carDetailsRef.once().then((event) => event.snapshot);
+  //     if (carDetailsSnapshot.value != null) {
+  //       Map<dynamic, dynamic> carDetailsMap =
+  //           carDetailsSnapshot.value as Map<dynamic, dynamic>;
 
-        // Check if carSeats is 3
-        if (carDetailsMap['carSeats'] == 3) {
-          // Send notification only if carSeats is 3
-          PushNotificationService.sendNotificationToSelectedDriver(
-              deviceToken, context, tripRequestRef!.key.toString());
-          debugPrint("Notification sent to driver with carSeats == 3");
-        } else {
-          debugPrint("Driver does not have carSeats == 3");
-        }
-      } else {
-        debugPrint("Car details not found for driver.");
-      }
-    } else {
-      debugPrint("Device token not found for driver.");
-    }
+  //       // Check if carSeats is 3
+  //       if (carDetailsMap['carSeats'] == 3) {
+  //         // Send notification only if carSeats is 3
+  //         PushNotificationService.sendNotificationToSelectedDriver(
+  //             deviceToken, context, tripRequestRef!.key.toString());
+  //         debugPrint("Notification sent to driver with carSeats == 3");
+  //       } else {
+  //         debugPrint("Driver does not have carSeats == 3");
+  //       }
+  //     } else {
+  //       debugPrint("Car details not found for driver.");
+  //     }
+  //   } else {
+  //     debugPrint("Device token not found for driver.");
+  //   }
 
-    const oneTickPerSec = Duration(seconds: 1);
-    var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
-      requestTimeoutDriver = requestTimeoutDriver - 1;
+  //   const oneTickPerSec = Duration(seconds: 1);
+  //   var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
+  //     requestTimeoutDriver = requestTimeoutDriver - 1;
 
-      //when trip request is accepted by online nearest available driver
-      currentDriverRef.onValue.listen((dataSnapshot) {
-        if (dataSnapshot.snapshot.value.toString() == "accepted") {
-          timer.cancel();
-          currentDriverRef.onDisconnect();
-          requestTimeoutDriver = 20;
-        }
-      });
-      //if 20 seconds passed - send notification to next nearest online available driver
-      if (requestTimeoutDriver == 0) {
-        currentDriverRef.set("timeout");
-        timer.cancel();
-        currentDriverRef.onDisconnect();
-        requestTimeoutDriver = 20;
+  //     //when trip request is accepted by online nearest available driver
+  //     currentDriverRef.onValue.listen((dataSnapshot) {
+  //       if (dataSnapshot.snapshot.value.toString() == "accepted") {
+  //         timer.cancel();
+  //         currentDriverRef.onDisconnect();
+  //         requestTimeoutDriver = 20;
+  //       }
+  //     });
+  //     //if 20 seconds passed - send notification to next nearest online available driver
+  //     if (requestTimeoutDriver == 0) {
+  //       currentDriverRef.set("timeout");
+  //       timer.cancel();
+  //       currentDriverRef.onDisconnect();
+  //       requestTimeoutDriver = 20;
 
-        //send notification to next nearest online available driver
-        searchDriver3();
-      }
-    });
-  }
+  //       //send notification to next nearest online available driver
+  //       searchDriver3();
+  //     }
+  //   });
+  // }
 
   searchDriver4() {
     if (availableNearbyOnlineDriversList!.length == 0) {
@@ -1560,7 +1470,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         requestTimeoutDriver = 20;
 
         //send notification to next nearest online available driver
-        searchDriver3();
+        searchDriver4();
       }
     });
   }
@@ -1656,7 +1566,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         requestTimeoutDriver = 20;
 
         //send notification to next nearest online available driver
-        searchDriver3();
+        searchDriver7();
       }
     });
   }

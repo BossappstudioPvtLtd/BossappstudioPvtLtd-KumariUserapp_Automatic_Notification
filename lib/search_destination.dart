@@ -111,7 +111,6 @@ class SearchDestinationPageState extends State<SearchDestinationPage>
         setState(() {
           dropOffPredictionsPlacesList = predictionsList;
         });
-        debugPrint("predictionResultInjson =$predictionResultInJson");
       }
     }
   }
