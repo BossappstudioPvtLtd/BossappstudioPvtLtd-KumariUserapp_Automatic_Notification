@@ -139,17 +139,17 @@ import 'package:new_app/Appinfo/app_info.dart';
 
 class PushNotificationService {
   static Future<String> getAccessToken() async {
-    final serviceAccountJson = {
+    final serviceAccountJson ={
   "type": "service_account",
-  "project_id": "myapiprojects-425308",
-  "private_key_id": "b1b8bc148372cb9de5a3da3cc43da2b680d973d7",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5fOQSc+246wq8\nTVjhXJOBrPIzsePqdDjRwyCg6f2yzXCq8oB5Fzw6Vq7IEraNuQkFH0I+HcU/Pjw/\nQ734ECeVJFyaSb3iLgvcnV/HSL56FcltKv+jPAcZP0ilshAPG03CowzdNFJqRcl8\n9ALbLVyeKTA0X2dCTbL93z/YV/6eRbo3OSZgDQcIPZ2BW5q5z0c4Hk7V9mxIyDN0\n54I067diWCW1rHG+FWgfKbqNTv4bFJ5F4UIINnLabQg9OF/7QnrhIA83IjuWfLbW\nt9BFZjq4TIu6JPXCsM2WAmkTaQw1q97Bdn1p9wXOueCP6PSMi3X9MBuXm6l/An21\n7SG2+ohPAgMBAAECggEAN/xXRq6RESB4dA+QhS0RJLHTxQCrf0enIsEXpxoZRg+2\nMxLQ7juyJRWm2aK0USCJdW9S6jbII2egfaPvweD2YZDBFpytYIhvch5aG2d8fpL2\n4il5UYa7ycYNIl4VdMnT9ayLJHU3bvYzc7Ce8BLIAsEB2Lz3CM80+GWa+qzMoG59\nruYCAcl0mQFlkmx3oRUjrUyd7u17ZUy+OoyVegPFhdM3/m+nj2D0+UZOcujEQHcL\nrnjsLLdyU4fKCKjVbjxWnzL3YvaA7pKtyN6g0f7T3rEKyKq/CBZdsRA0Mecvprxj\n5APwNpFMQVde7GPYUVMrqVZ9shFVbio4HIHjjsIbmQKBgQDkVTP4HX1Ce1EWknKM\ncHIGWFFAYZOC3tdBPnl4mNb8P+KPpwsQ9v427ATN1vowANc0wp+98Pm+NkGnu+rD\nJ/Jx1qywEtBcyHGlY+9TWA09nviNK8q1a2sCHJzz6bHtouAX40aJ6gGorCR6N8Vz\nBbp7X3O5/9nWwsapqc3zz1Ph7QKBgQDP9qdAQGuT6NlXCc2AkVYMSU+cBFg3vWnX\nPQGzvyMJnk1Juz0RHvvoECwPImebeLXlyQeh3IM2JjgeBIiqGk0I4OnBPa/eClFc\n54ZmEGKoaiMlbH17idf8vNzhZKJNTpRncYSZllP7owxAxxCqpzdPK7RYD3sDO/+y\nkhgqAEU7qwKBgQDYzBWGFeni/9ekSPS+Z928LIspR/yZnCBh8IHBgc1OwRHLN94I\nA5yoZTzCfMYcYg/0Jn8qB+35Lubz7jcfiYRnll9s5tAz6JYPZW3NgqM/yPtSfyv/\nSbjWzngwF8o7ShTgWYmWVTux/ZC9AstVRTElByKIjmc1xMaAPZwxTL/mmQKBgQCd\nvAtnZHU0Hqyao8jG93U4pHJJd9IhlP0uUAt2dkbxCKy+e9H5pnKStZF1eTb0aT4u\nJ6guUL8E10BBJFc0DfbYAR/LfipiU5kaylDaIRtzee1meT9D8G1uOSGfo2CnGi7d\ntvBIPgk9F5I3n8U4atQ8rH2BPVykO2HZ442IbeQVOQKBgEqSOgSSoWMzfOHofgwq\npbUyw4yNs7E3L1EerLsKkY+udlaYFrefeTAqbSONyQGzc5zxMxswWxC3DuBRKcfv\nP/ksuUyBxFIy/u1vjrK1GFaNCnyLu4ZqvDOG9mlF0kBE0hhDz8/ilITYl6gnKDhi\nSVzLOwL3oqZHhdlz4yb2gzBO\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-ukwai@myapiprojects-425308.iam.gserviceaccount.com",
-  "client_id": "116135358640058686296",
+  "project_id": "kumariuseranddriver",
+  "private_key_id": "4511889c20ec4893c5f510d405cb41a1cf2114ce",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDpenNY02OOPZpk\n/5rUAIPAzNaTbjx4os+a63WaA8R/jNfFgTgJk3bZdRTIduK0m/Y5Evgyc5f7sgSe\nN5TQVqd5i4mJp4ROKn3KbQ12mt5x4+molm1HW2rIqvDZ62L2Op0+v9DnhGewm5dB\n768Kfo5F5FQEEZD7yghUodI4exNSlSAHFJ++fXQM9BXUIdDnZyD3Y5Ku0nUXvOVO\nFni68kDIaE1ZRtWs9jj02oJSDjP26eIeApw7eS33PPWNPn2jQYPgyWZoFVKW2+Ms\nNP1givLEAk7VA/ml2Y/BZuvNz8H2t7vb8ryO4Ps3j6qg8YNnezcwK3KvQLclT1I9\nRRpNQIRlAgMBAAECggEALcJSjhOsHOok8uuHwEoziFt9KJr/3hLmxnGkdGGNpwQH\nHA312iadMgR45MssJoK0sL3viA/Qt0NOFWZGU8jP/QnklGaRDzLTwZM7AsZal464\nMlL9KvGXTan3F3bDSAf33p8AhgeUvO/ZptIfh9qC7t7PupZoyHhxxoiKp4gzosj4\nd44eFtepCstlcZ1mZtpzg7ppSXl1B1El+jFK4H4H5Vi07XnlE/JIsan+vpS151LC\nvDzUBOsSv8rlBQ62/mZW+H0ZtEDCIAlFYRiZEb1wyv9ndJsrf9PPDs0gpi7/rrZn\nIbF2Fw4F7IwSYqGXGEEjwuR19BOtMdxdQqflf/XzsQKBgQD/hSqZ3A3b+Mwofa4a\nXnHIClZm92WLoprfjavle1AnFnFfmW8BYSH6Ld5qlvI4OACEw8XIapMi1bfHcS66\nk88rxhAcFNomwGX8KTJC2QUMwSodJQc3PEBcw/ToC9xyyV7B3Y/gxVex73LUJTIA\nw4qw2sG8NbQsqq2iFwZUZRRPKQKBgQDp6rAuYm+YqucyhuWOkaGUy1SFvF+UB3DS\nl7jub5QPuOiLEZzDd8dv25HDobp7j4sAZUxCNRGJ9nJ1fg5ivi64yquxmVkem5t0\nGplfIWDBxz9tFznVwVtvqrghxF56uLYbG03EJiwFWz8Hwg3dB30gKIEvLKdaL6k6\nvLgMX/J+3QKBgEkckVP04wJN7hyn2WkyHNxgGNjdcPDDVg0hPE4tOoH0qfvwqxJ5\n+H7dIQbeqe/sFjnmynDODcup2yv19qjsIhskUPe3/7OW2ZeNMhRuhENiAerU7Xug\ngcoJR8odmrY9aB+QhdqKnM0M9o49FlGhoc14ynZP533gWE5IyEbdpTIBAoGBANtM\n/bPe8YUN5QdH1PueqQAYyLtA6dKcTzgAqo5P6V38G3gWIQRYzY+fKL9iZrTk1Iqg\nbag8nJ7dgF2Kuu30I1V4HRO6EwVRGaL2NQgtAMtrg5lBByXRy2mbglmWAoXHmmM7\na+MTbn3vF96sHdc06Cg4ETUrBhLVUDETMPHZGj25AoGAIH7ce3MJ1T/Shs/Kci3w\nbXDGvQ1l+jgbY0N+Gt9SBY6M2/bQ4Q6ufzNTfwbrzyL3FNNtzUW+bV2WyIaLvPeW\n5vLmWB2BjTK661ay4PFpEUrpvMEnR8/F5csGx3om7Q7jRF8uK+3uOF16VXWPmnkz\nhKCGkX25lejJEIXBxeMnJpo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "kumari-travel-application@kumariuseranddriver.iam.gserviceaccount.com",
+  "client_id": "112371193469876303967",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ukwai%40myapiprojects-425308.iam.gserviceaccount.com",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/kumari-travel-application%40kumariuseranddriver.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 };
 
@@ -213,7 +213,7 @@ class PushNotificationService {
     print('Pick-up location: $pickUpAddress');
     final String serverAccessTokenKey = await getAccessToken();
     String endpointFirebaseCloudMessaging =
-        'https://fcm.googleapis.com/v1/projects/myapiprojects-425308/messages:send';
+        'https://fcm.googleapis.com/v1/projects/kumariuseranddriver/messages:send';
 
     final Map<String, dynamic> message = {
       'message': {

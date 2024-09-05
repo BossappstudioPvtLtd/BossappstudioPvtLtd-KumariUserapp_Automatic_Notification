@@ -74,7 +74,7 @@ class TripContainer extends StatelessWidget {
                   ClipOval(
                     child: Image.network(
                       photoDriver.isEmpty
-                          ? "https://firebasestorage.googleapis.com/v0/b/myapiprojects-425308.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
+                          ? "https://firebasestorage.googleapis.com/v0/b/kumariuseranddriver.appspot.com/o/drivericon.png?alt=media&token=06d831a7-7b31-42f4-996d-9412a922b368"
                           : photoDriver,
                       width: 60,
                       height: 60,

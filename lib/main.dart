@@ -13,12 +13,12 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(
      options: const FirebaseOptions(
-      apiKey: 'AIzaSyDf9BPo3W5Y-E4ERf4VIYKj7VbvHlAUBUY',
-      appId: '1:1008646289128:android:36a1c03ec43f60d72ebb5d',
-      messagingSenderId: '1028914323103',
-      projectId: 'myapiprojects-425308',
-      authDomain: 'myapiprojects-425308.firebaseapp.com',
-      storageBucket: 'myapiprojects-425308.appspot.com',
+      apiKey: 'AIzaSyAGsEDMK76YgvpGsPucCVJ5bIy642pouaU',
+      appId: '1:624263695924:android:00ff4d89022ddc0b04c461',
+      messagingSenderId: '624263695924',
+      projectId: 'kumariuseranddriver',
+      authDomain: 'kumariuseranddriver.firebaseapp.com',
+      storageBucket: 'kumariuseranddriver.appspot.com',
     ),
   );
   await Permission.locationWhenInUse.isDenied.then((valueOfPermission) {
