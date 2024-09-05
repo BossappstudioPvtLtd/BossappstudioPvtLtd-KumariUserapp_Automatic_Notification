@@ -810,7 +810,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
       carDetailsDriver = "";
       tripStatusDisplay = 'Driver is Arriving';
     });
-     Restart.restartApp();
+    // Restart.restartApp();
 
   }
 

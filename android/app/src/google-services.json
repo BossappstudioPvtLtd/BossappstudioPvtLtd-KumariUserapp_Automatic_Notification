@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1008646289128",
-    "project_id": "myapiprojects-425308",
-    "storage_bucket": "myapiprojects-425308.appspot.com"
+    "project_number": "624263695924",
+    "project_id": "kumariuseranddriver",
+    "storage_bucket": "kumariuseranddriver.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1008646289128:android:36a1c03ec43f60d72ebb5d",
+        "mobilesdk_app_id": "1:624263695924:android:00ff4d89022ddc0b04c461",
         "android_client_info": {
           "package_name": "com.yourdomain.new_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDf9BPo3W5Y-E4ERf4VIYKj7VbvHlAUBUY"
+          "current_key": "AIzaSyAGsEDMK76YgvpGsPucCVJ5bIy642pouaU"
         }
       ],
       "services": {

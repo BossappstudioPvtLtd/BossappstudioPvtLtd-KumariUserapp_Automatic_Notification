@@ -229,6 +229,14 @@ Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) a
     durationPerMinuteAmount = minutesFare;
     totalTaxAmount = taxAmount;
     
+    
+print("4444444444444444+++++++++++baseFareAmount+++++++++++++++++$baseFareAmount");
+print("+++++++++++distancePerKmAmount+++++++++++++++++$distancePerKmAmount");
+
+print("+++++++++++durationPerMinuteAmount+++++++++++++++++$durationPerMinuteAmount");
+print("+++++++++++totalTaxAmount+++++++++++++++++$totalTaxAmount");
+    
+    
   } else {
     return "Fare data not available";
   }
@@ -238,9 +246,14 @@ Future<String> calculateFareAmountFor4Seats(DirectionDetails directionDetails) a
 if (radiusSnapshot.exists) {
   // Extract data from the radiusSnapshot
   radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
+  
+
+print("============================radiusValue==============================$radiusValue");
 
   // Convert radiusValue from kilometers to meters
   radiusInMeters = radiusValue * 1000;
+  
+print("=====================radiusInMeters==========================$radiusInMeters");
 
 } else {
   // Handle case where radius data is not available
@@ -249,24 +262,38 @@ if (radiusSnapshot.exists) {
   // Convert radiusValue from kilometers to meters (will still be 0)
   radiusInMeters = radiusValue * 1000;
 
+print("+++++++++++radiusInMeters+++++++++++++++++$radiusInMeters");
 }
 
 // Calculate fare based on directionDetails and radiusAmount
 double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
 
 
+print("+++++++++++totalDistanceTravelFareAmount+++++++++++++++++$totalDistanceTravelFareAmount");
 
 // Adjust the fare amount based on radiusInMeters if it's greater than 0
+
+
+print("====222222222222222222222222222222222=============radiusInMeters===================$radiusInMeters");
+
+print("====111111111===============radiusInMeters===================${ directionDetails.distanceValueDigits}");
 if (radiusInMeters < directionDetails.distanceValueDigits!) {
+
   totalDistanceTravelFareAmount *= 2;
 }
 
 
 
 
+
 double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
+print("====111111111===============totalDurationSpendFareAmount===================$totalDurationSpendFareAmount");
+
 double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
+
+print("===================overAllTotalFareAmount===================$overAllTotalFareAmount");
+
 
 // Calculate tax amount only if totalTaxAmount is greater than 0
 double overallTotalTaxAmount = 0.0;
@@ -292,7 +319,7 @@ Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) a
   double radiusValue = 0; // Variable to store radius data
 
   // Get reference to fareData
-  DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('premium');
+  DatabaseReference fareDataRef = FirebaseDatabase.instance.ref().child('fareData').child('Premium');
   // Get reference to radiusData
   DatabaseReference radiusDataRef = FirebaseDatabase.instance.ref().child('radiusData').child("Premium");
 
@@ -313,7 +340,13 @@ Future<String> calculateFareAmountFor7Seats(DirectionDetails directionDetails) a
     durationPerMinuteAmount = minutesFare;
     totalTaxAmount = taxAmount;
     
-print("+++++++++++baseFareAmount+++++++++++++++++$baseFareAmount");
+print("7777777777777777+++++++++++baseFareAmount+++++++++++++++++$baseFareAmount");
+print("=======================distancePerKmAmount====================$distancePerKmAmount");
+
+print("----------------------durationPerMinuteAmount----------------------$durationPerMinuteAmount");
+print("+++++++++++totalTaxAmount+++++++++++++++++$totalTaxAmount");
+    
+
   } else {
     return "Fare data not available";
   }
@@ -325,11 +358,11 @@ if (radiusSnapshot.exists) {
   // Extract data from the radiusSnapshot
   radiusValue = double.parse(radiusSnapshot.child('radius').value.toString());
 
-print("+++++++++++radiusValue+++++++++++++++++$radiusValue");
   // Convert radiusValue from kilometers to meters
   radiusInMeters = radiusValue * 1000;
   
 
+print("----------------------radiusInMeters----------------------$radiusInMeters");
 } else {
   // Handle case where radius data is not available
   radiusValue = 0; // Default value or handle as needed
@@ -343,7 +376,16 @@ print("+++++++++++radiusValue+++++++++++++++++$radiusValue");
 // Calculate fare based on directionDetails and radiusAmount
 double totalDistanceTravelFareAmount = (directionDetails.distanceValueDigits! / 1000) * distancePerKmAmount;
 
+
+print("----------------------directionDetails.distanceValueDigits----------------------${directionDetails.distanceValueDigits}");
+
+print("----------------------totalDistanceTravelFareAmount----------------------$totalDistanceTravelFareAmount");
+
 // Adjust the fare amount based on radiusInMeters if it's greater than 0
+
+print("----------------------radiusInMeters----------------------$radiusInMeters");
+
+print("----------------------radiusInMeters----------------------${directionDetails.distanceValueDigits}");
 if (radiusInMeters < directionDetails.distanceValueDigits!) {
   
   totalDistanceTravelFareAmount *= 2;
@@ -357,8 +399,12 @@ if (radiusInMeters < directionDetails.distanceValueDigits!) {
 
 double totalDurationSpendFareAmount = (directionDetails.durationValueDigits! / 60) * durationPerMinuteAmount;
 
+
+print("----------------------totalDurationSpendFareAmount----------------------$totalDurationSpendFareAmount");
 double overAllTotalFareAmount = baseFareAmount + (totalDistanceTravelFareAmount + totalDurationSpendFareAmount);
 
+
+print("----------------------overAllTotalFareAmount----------------------$overAllTotalFareAmount");
 
 // Calculate tax amount only if totalTaxAmount is greater than 0
 double overallTotalTaxAmount = 0.0;
