@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -57,19 +58,21 @@ class SpalshRipple extends HookWidget {
                         if (snapshot.hasData && !snapshot.hasError && snapshot.data.snapshot.value != null) {
                           final data = Map<String, dynamic>.from(snapshot.data.snapshot.value);
                           return ClipRRect(
-                            borderRadius: BorderRadius.circular(100.0),
-                            child: Image.network(
-                              data['photo'],
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        } else {
+                          borderRadius: BorderRadius.circular(100.0),
+                          child: CachedNetworkImage(
+                          imageUrl: data['photo'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const CircularProgressIndicator(), // Placeholder while loading
+                          errorWidget: (context, url, error) => const Icon(Icons.person,size: 20,), // Error widget if image fails to load
+                       ),
+                      );
+                    }     else {
                           return const Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
+                  }
+                },
+              ),
             ),
           )
         ],
