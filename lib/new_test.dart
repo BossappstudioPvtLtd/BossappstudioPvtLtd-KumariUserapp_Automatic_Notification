@@ -42,8 +42,7 @@ class HomePage1 extends StatefulWidget {
 }
 
 class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
-  final Completer<GoogleMapController> googleMapCompleterController =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
   GoogleMapController? controllerGoogleMap;
   Position? currentPositionOfUser;
   double searchContainerHeight = 276;
@@ -200,16 +199,13 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         });
       } else {
         await FirebaseAuth.instance.signOut();
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (c) => const LoginScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const LoginScreen()));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content:
-                Text("You are blocked. Contact admin: Kumariacabs@gmail.com")));
+            content:Text("You are blocked. Contact admin: Kumariacabs@gmail.com")));
       }
     } else {
       await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (c) => const LoginScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const LoginScreen()));
     }
   }
 
@@ -226,29 +222,15 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
   }
 
   retrieveDirectionDetails() async {
-    var pickUpLocation =
-        Provider.of<AppInfo>(context, listen: false).pickUpLocation;
-    var dropOffDestinationLocation =
-        Provider.of<AppInfo>(context, listen: false).dropOffLocation;
+    var pickUpLocation =Provider.of<AppInfo>(context, listen: false).pickUpLocation;
+    var dropOffDestinationLocation = Provider.of<AppInfo>(context, listen: false).dropOffLocation;
+    var pickupGeoGraphicCoOrdinates = LatLng( pickUpLocation!.latitudePosition!, pickUpLocation.longitudePosition!);
+    var dropOffDestinationGeoGraphicCoOrdinates = LatLng(dropOffDestinationLocation!.latitudePosition!, dropOffDestinationLocation.longitudePosition!);
 
-    var pickupGeoGraphicCoOrdinates = LatLng(
-        pickUpLocation!.latitudePosition!, pickUpLocation.longitudePosition!);
-    var dropOffDestinationGeoGraphicCoOrdinates = LatLng(
-        dropOffDestinationLocation!.latitudePosition!,
-        dropOffDestinationLocation.longitudePosition!);
-
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) =>
-          LoadingDialog(messageText: "Getting direction...".tr()),
-    );
+    showDialog(barrierDismissible: false,context: context,builder: (BuildContext context) =>LoadingDialog(messageText: "Getting direction...".tr()), );
 
     ///Directions API
-    var detailsFromDirectionAPI =
-        await CommonMethods.getDirectionDetailsFromAPI(
-            pickupGeoGraphicCoOrdinates,
-            dropOffDestinationGeoGraphicCoOrdinates);
+    var detailsFromDirectionAPI =await CommonMethods.getDirectionDetailsFromAPI( pickupGeoGraphicCoOrdinates, dropOffDestinationGeoGraphicCoOrdinates);
 
     setState(() {
       tripDirectionDetailsInfo = detailsFromDirectionAPI;
@@ -708,56 +690,28 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
 
     //fit the polyline into the map
     LatLngBounds boundsLatLng;
-    if (pickupGeoGraphicCoOrdinates.latitude >
-            dropOffDestinationGeoGraphicCoOrdinates.latitude &&
-        pickupGeoGraphicCoOrdinates.longitude >
-            dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: dropOffDestinationGeoGraphicCoOrdinates,
-        northeast: pickupGeoGraphicCoOrdinates,
-      );
-    } else if (pickupGeoGraphicCoOrdinates.longitude >
-        dropOffDestinationGeoGraphicCoOrdinates.longitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude,
-            dropOffDestinationGeoGraphicCoOrdinates.longitude),
-        northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
-            pickupGeoGraphicCoOrdinates.longitude),
-      );
-    } else if (pickupGeoGraphicCoOrdinates.latitude >
-        dropOffDestinationGeoGraphicCoOrdinates.latitude) {
-      boundsLatLng = LatLngBounds(
-        southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,
-            pickupGeoGraphicCoOrdinates.longitude),
-        northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude,
-            dropOffDestinationGeoGraphicCoOrdinates.longitude),
-      );
-    } else {
-      boundsLatLng = LatLngBounds(
-        southwest: pickupGeoGraphicCoOrdinates,
-        northeast: dropOffDestinationGeoGraphicCoOrdinates,
-      );
-    }
-
-    controllerGoogleMap!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
+     if (pickupGeoGraphicCoOrdinates.latitude >dropOffDestinationGeoGraphicCoOrdinates.latitude &&
+        pickupGeoGraphicCoOrdinates.longitude >dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+        boundsLatLng = LatLngBounds( southwest: dropOffDestinationGeoGraphicCoOrdinates, northeast: pickupGeoGraphicCoOrdinates,);} 
+else if (pickupGeoGraphicCoOrdinates.longitude >dropOffDestinationGeoGraphicCoOrdinates.longitude) {
+        boundsLatLng = LatLngBounds( southwest: LatLng(pickupGeoGraphicCoOrdinates.latitude,dropOffDestinationGeoGraphicCoOrdinates.longitude), 
+        northeast: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,pickupGeoGraphicCoOrdinates.longitude),);} 
+else if (pickupGeoGraphicCoOrdinates.latitude > dropOffDestinationGeoGraphicCoOrdinates.latitude) {
+        boundsLatLng = LatLngBounds( southwest: LatLng(dropOffDestinationGeoGraphicCoOrdinates.latitude,pickupGeoGraphicCoOrdinates.longitude),
+        northeast: LatLng(pickupGeoGraphicCoOrdinates.latitude, dropOffDestinationGeoGraphicCoOrdinates.longitude),); } 
+   else {boundsLatLng = LatLngBounds(southwest: pickupGeoGraphicCoOrdinates, northeast: dropOffDestinationGeoGraphicCoOrdinates,);}
+        controllerGoogleMap! .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 72));
 
     //add markers to pickup and dropOffDestination points
-    Marker pickUpPointMarker = Marker(
-      markerId: const MarkerId("pickUpPointMarkerID"),
-      position: pickupGeoGraphicCoOrdinates,
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      infoWindow: InfoWindow(
-          title: pickUpLocation.placeName, snippet: "Pickup Location"),
-    );
+    Marker pickUpPointMarker = Marker( markerId: const MarkerId("pickUpPointMarkerID"),
+      position: pickupGeoGraphicCoOrdinates,icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      infoWindow: InfoWindow(title: pickUpLocation.placeName, snippet: "Pickup Location"),);
 
     Marker dropOffDestinationPointMarker = Marker(
       markerId: const MarkerId("dropOffDestinationPointMarkerID"),
       position: dropOffDestinationGeoGraphicCoOrdinates,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow: InfoWindow(
-          title: dropOffDestinationLocation.placeName,
-          snippet: "Destination Location"),
+      infoWindow: InfoWindow(title: dropOffDestinationLocation.placeName,snippet: "Destination Location"),
     );
 
     setState(() {
@@ -841,30 +795,23 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
     Set<Marker> markersTempSet = <Marker>{};
 
     for (OnlineNearbyDrivers eachOnlineNearbyDriver
-        in ManageDriversMethods.nearbyOnlineDriversList) {
-      LatLng driverCurrentPosition = LatLng(
+    in  ManageDriversMethods.nearbyOnlineDriversList) {
+        LatLng driverCurrentPosition = LatLng(
         eachOnlineNearbyDriver.latDriver!,
-        eachOnlineNearbyDriver.lngDriver!,
-      );
+        eachOnlineNearbyDriver.lngDriver!,);
 
-      debugPrint(
-          "============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
+      debugPrint("============driver ID==============${eachOnlineNearbyDriver.uidDriver}");
 
       // Fetch car details from Firebase Realtime Database
       DataSnapshot snapshot = await FirebaseDatabase.instance
           .ref("drivers/${eachOnlineNearbyDriver.uidDriver}/car_details")
           .get();
 
-      if (snapshot.exists) {
-        Map<String, dynamic> carDetails =
-            Map<String, dynamic>.from(snapshot.value as Map);
+      if (snapshot.exists) { Map<String, dynamic> carDetails = Map<String, dynamic>.from(snapshot.value as Map);
 
         int carSeats;
-        try {
-          carSeats = int.parse(carDetails['carSeats'].toString());
-        } catch (e) {
-          debugPrint(
-              "Error parsing carSeats for driver ID: ${eachOnlineNearbyDriver.uidDriver}, setting default value.");
+        try { carSeats = int.parse(carDetails['carSeats'].toString());
+        } catch (e) {debugPrint( "Error parsing carSeats for driver ID: ${eachOnlineNearbyDriver.uidDriver}, setting default value.");
           carSeats = 0; // Default value if parsing fails
         }
         BitmapDescriptor? carIcon;
@@ -1087,6 +1034,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         if ((eventSnapshot.snapshot.value as Map)["fareAmount"] != null) {
           double fareAmount = double.parse((eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
         var responseFromPaymentDialog = await showDialog( context: context,
+
+             barrierDismissible: true,
             builder: (BuildContext context) => PaymentDialog(fareAmount: fareAmount.toString()),
           );
           if (responseFromPaymentDialog == "paid") { tripRequestRef!.onDisconnect();
@@ -1097,6 +1046,8 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
             Restart.restartApp();
           }
         }
+        
+
       }
     });
   }
@@ -1205,12 +1156,9 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
        tripStatusDisplayController.add("Driving to DropOff Location\n- ${directionDetailsPickup.durationTextString}");
        requestingDirectionDetailsInfo = false;}}
 
-  noDriverAvailable() {
-    showDialog(context: context,barrierDismissible: false, builder: (BuildContext context) => InfoDialog(
-              title: "No Driver Available".tr(),
-              description:"No driver found in the nearby location. Please try again shortly.".tr(),
-            ));
-  }
+  noDriverAvailable() 
+  {showDialog(context: context,barrierDismissible: false, builder: (BuildContext context) => InfoDialog(
+              title: "No Driver Available".tr(), description:"No driver found in the nearby location. Please try again shortly.".tr(),));}
 
   searchDriver() {
     if (availableNearbyOnlineDriversList!.length == 0) {
@@ -1612,6 +1560,7 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        
         onPressed: () async {
           var responseFromSearchPage = await Navigator.push(context,
               MaterialPageRoute(builder: (c) => const SearchDestinationPage()));
@@ -1623,12 +1572,24 @@ class _HomePage1State extends State<HomePage1> with WidgetsBindingObserver {
           borderRadius: BorderRadius.circular(50),
         ),
         backgroundColor: const Color.fromARGB(255, 3, 22, 60),
-        child: const Icon(
-          Icons.location_on_outlined,
-          color: Colors.white,
-          size: 30,
+        child:
+          ShaderMask(
+  shaderCallback: (Rect bounds) {
+    return const LinearGradient(
+      colors: [Colors.red, Colors.amber],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ).createShader(bounds);
+  },
+  child: const Icon(
+    Icons.location_on_outlined,
+    color: Colors.white,  // This color will be ignored due to the ShaderMask
+    size: 30,
+  ),
+)
+
         ),
-      ),
+      
     );
   }
 }
